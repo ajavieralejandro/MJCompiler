@@ -1,2 +1,7 @@
-
-
+'''
+'X'
+"Soy una cadena bien cerrada"
+"Soy una mala cadena 
+/*
+Soy un comentario
+*	*/										`

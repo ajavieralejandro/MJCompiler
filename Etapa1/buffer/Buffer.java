@@ -20,11 +20,12 @@ public class Buffer {
     private int i;
     private BufferedReader bufferedReader;
     private FileReader fileReader;
+    private boolean isEOF;
     
     public Buffer(String fileName) throws FileNotFoundException{
       
             //inicializa el número de línea en 0.
-            
+            this.isEOF = false;
             this.lineNumber = 0;
             this.fileName = fileName;
             this.fileReader=  new FileReader(this.fileName);
@@ -35,16 +36,15 @@ public class Buffer {
        
     }
     
-    //consume del Buffer o Archivo el siguiente caracter.
-    //Si no leyo todavía una linea del archivo consume una linea.
-    //Se usa por usar la clase Character para poder enviar null en caso de que llego a fin de archivo
+    
     public Character nextBuffer(){
         //si todavía no leyo ninguna línea la consume.
-         Character toR;
-        if(line==null)
+    	
+        Character toR;
+        if(line==null && !this.isEOF)
             consumirLinea();  
-        //si la línea sigue siendo nula quiere decir que llego a fin de archivo.
-        if(line==null)
+        //si la linea es nula o llegue a fin de archivo
+        if(this.isEOF || line==null )
             toR= null;
         else if(this.i<line.length())
             toR = line.charAt(i++);
@@ -75,7 +75,8 @@ public class Buffer {
         return this.lineNumber;
     }
     
-    private void consumirLinea(){
+    
+    public void consumirLinea(){
         this.i = 0;
           try {
             // FileReader reads text files in the default encoding.
@@ -85,8 +86,10 @@ public class Buffer {
             
      
             //llego a fin de archivo y hay que cerrar el buffer
-            if(this.line == null)
+            if(this.line == null) {
                bufferedReader.close();
+               this.isEOF = true;
+            }
             else
                 this.lineNumber++;
                               

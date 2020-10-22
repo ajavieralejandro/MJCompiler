@@ -21,6 +21,11 @@ public class Token {
     especificando el número de línea
     y sin especificar.
     */
+    /**
+     * 
+     * @param type entero tipo
+     * @param lexema string
+     */
 
     public Token(int type, String lexema) {
         this.type = type;

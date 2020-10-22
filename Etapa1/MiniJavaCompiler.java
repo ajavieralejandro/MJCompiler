@@ -44,15 +44,7 @@ public class MiniJavaCompiler {
                     System.out.println("El archivo donde se mostrata el resultado final sera¡ : "+fileOut);
             
             // TODO code application logic here
-            /*
-            Buffer buffer = new Buffer("proob.txt");
-            Character aux = buffer.nextChar();
-            while(aux!= null){
-                System.out.print(aux);
-                aux=buffer.nextChar();
-            }
-            System.out.print("Se llego al fin de archivo");
-            */
+  
             Alexico lexico = null;
             int errores = 0;
            
@@ -65,16 +57,21 @@ public class MiniJavaCompiler {
                     aux= lexico.nextToken();
                 }
                 catch(TokenException e) {
+                	
                     System.out.println(e.getMessage()); 
                     errores++;
+                    //Creo un token de Error para que no me ingrese en el ciclo 
+                    aux = new Token(-1,"Error!");
                 }
 
 
                 while(aux==null || aux.getType()!=ClavesServices.TokenTypes.EOF.ordinal()){
                     if(fileOut==null){
+                    	if(aux.getType()!=-1)
                     	System.out.println("("+ClavesServices.TokenTypes.values()[aux.getType()]+","+aux.getLexema()+","+aux.getLine()+")");
                     }
                     else{
+                    	if(aux.getType()!=-1)
                         writer.println("("+ClavesServices.TokenTypes.values()[aux.getType()]+","+aux.getLexema()+","+aux.getLine()+")");
                     
                     }
@@ -83,6 +80,8 @@ public class MiniJavaCompiler {
                         aux= lexico.nextToken();
                     }
                     catch(TokenException e) {
+                    	//Seteo el token a null si se produjo un error
+                    	aux = new Token(-1,"Error!");
                         System.out.println(e.getMessage()); 
                         errores++;
                     }
