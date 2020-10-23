@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-import Claves.ClavesServices;
 import lexico.Alexico;
+import Sintaxis.*;
 import buffer.Buffer;
+import Claves.ClavesServices;
 import token.TokenException;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import token.Token;
 
 /**
@@ -18,82 +15,47 @@ import token.Token;
  * @author Javier Amorosi
  */
 public class MiniJavaCompiler {
-	
-	protected int errores; 
 
-     /**
+    /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println(("Bienvenido al Analizador Lexico"));
+        System.out.println(("Bienvenido al Analizador Sintactico"));
         String file = null;
         String fileOut = null;
         PrintWriter writer = null;
         if(args.length==1)
             file = args[0];
-        if(args.length==2){
+        /*if(args.length==2){
             file = args[0];
             fileOut=args[1];
-        }
+        }*/
  
-        if(file==null || args.length>2)
+        if(file==null || args.length>1)
             System.out.println("Error en los parametros, vuelva a invocar el programa con el archivo correcto o la cantidad de parametros correcta.");
         else{
                 System.out.println("Se va a leer el archivo : "+file);
                 if(fileOut!=null)
-                    System.out.println("El archivo donde se mostrata el resultado final sera¡ : "+fileOut);
+                    System.out.println("El archivo donde se mostrata el resultado final serÃ¡ : "+fileOut);
             
             // TODO code application logic here
-  
-            Alexico lexico = null;
-            int errores = 0;
+            /*
+            Buffer buffer = new Buffer("proob.txt");
+            Character aux = buffer.nextChar();
+            while(aux!= null){
+                System.out.print(aux);
+                aux=buffer.nextChar();
+            }
+            System.out.print("Se llego al fin de archivo");
+            */
            
             try{
                 if(fileOut!=null)
                     writer = new PrintWriter(fileOut, "UTF-8");                       
-               lexico = new Alexico(file);
-                Token aux= null;
-                try {
-                    aux= lexico.nextToken();
-                }
-                catch(TokenException e) {
-                	
-                    System.out.println(e.getMessage()); 
-                    errores++;
-                    //Creo un token de Error para que no me ingrese en el ciclo 
-                    aux = new Token(-1,"Error!");
-                }
-
-
-                while(aux==null || aux.getType()!=ClavesServices.TokenTypes.EOF.ordinal()){
-                    if(fileOut==null){
-                    	if(aux.getType()!=-1)
-                    	System.out.println("("+ClavesServices.TokenTypes.values()[aux.getType()]+","+aux.getLexema()+","+aux.getLine()+")");
-                    }
-                    else{
-                    	if(aux.getType()!=-1)
-                        writer.println("("+ClavesServices.TokenTypes.values()[aux.getType()]+","+aux.getLexema()+","+aux.getLine()+")");
-                    
-                    }
-                    
-                    try {
-                        aux= lexico.nextToken();
-                    }
-                    catch(TokenException e) {
-                    	//Seteo el token a null si se produjo un error
-                    	aux = new Token(-1,"Error!");
-                        System.out.println(e.getMessage()); 
-                        errores++;
-                    }
-
-
-            }
-                if(errores==0)
-                	System.out.print("El analizador Lexico llego a EOF sin encontrar errores.");
-                else 
-                	System.out.print("El analizador Lexico llego a EOF con : "+errores+"errores");
-
-                	
+              
+                Asintactico nuevo = new Asintactico(file);
+                nuevo.analize();
+                //cierro el archivo de escritura si existe
                 if(fileOut!=null)
                     writer.close();
 
@@ -101,22 +63,20 @@ public class MiniJavaCompiler {
             catch (FileNotFoundException ex) {
                 System.out.println("Error al crear el archivo. ");
             } catch (UnsupportedEncodingException ex) {
-                System.out.println("Formato de codificacion especificado no valido para el tipo de archivo.");
+                System.out.println("Formato de codificaciÃ³n especificado no valido para el tipo de archivo.");
 
             }
-            
+
             catch(TokenException e){
                 System.out.println(e.getMessage());
-           
+            }
+            catch(AsintacticoException e){
+                System.out.println(e.getMessage());
             }
         
         }
-    
         
     
     }
     
-   
-    
-
 }
