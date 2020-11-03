@@ -17,7 +17,7 @@ import token.TokenException;
  * @author Javier Amorosi
  */
 public class Alexico {
-    private final Token EOF;
+    private  Token EOF;
     private int beginRow;
     private int cantTab; 
     private String lexema;
@@ -118,7 +118,6 @@ public class Alexico {
                             this.limpiarBuffer();
                         }
                         else {
-                        	System.out.println("El char actual es : "+this.charActual);
                             char aux = this.charActual;
                             this.limpiarBuffer();
                             this.buffer.consumirLinea();

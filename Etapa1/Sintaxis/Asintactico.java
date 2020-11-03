@@ -281,7 +281,9 @@ public class Asintactico {
     }
     //Regla 23 a 28
     private void sentencia() throws AsintacticoException{
-  
+    	
+    	System.out.println("Estoy en sentencia");
+    	System.out.println("El Token actual es : "+this.actual.getLexema());
         if(!this.match(ClavesServices.TokenTypes.PPY.ordinal())){
             if(this.actual.getType()==ClavesServices.TokenTypes.idMetVar.ordinal()){
                 this.asignacionLlamada();
@@ -290,7 +292,7 @@ public class Asintactico {
                         + "y no se encontro."+this.actual.getError());
             }
        
-            }
+            
             //Estoy en siguientes de tipo
             else if(siguientesTipo()){
                 this.tipo();
@@ -304,6 +306,14 @@ public class Asintactico {
                 //System.out.println("Estoy en el if de sentencia...");
                         this.sentenciaIf();
             }
+            
+            //siguientes llamada
+            else if(this.siguientesAcceso()){
+            	System.out.println("Estoy en los siguientes de llamada");
+            	this.asignacionLlamada();
+            	
+            }
+  
             //Estoy en siguientes de While
             else if(this.actual.getType()==ClavesServices.TokenTypes.WHILE.ordinal())
                        this.sentenciaWhile();
@@ -326,11 +336,15 @@ public class Asintactico {
                         +this.actual.getError());
             
         }
+    }
     
     //Regla 29
 	  private void asignacionLlamada() throws AsintacticoException{
+		System.out.println("Estoy en asignacion llamada y voy par acceso");
 	  	this.acceso();
+	  	System.out.println("Volvi de asignacion llamada con : "+this.actual.getLexema());
 	  	if(this.siguientesTipoAsignacion()) {
+	  		System.out.println("Entre en asignacion");
 	  		this.tipoAsignacion();
 	  		this.expresion();
 	  	}
@@ -339,10 +353,17 @@ public class Asintactico {
 	  //Regla 30
 	  
 	  private void tipoAsignacion() throws AsintacticoException{
+		  System.out.println("Estoy en tipo asignacion con :"+this.actual.getLexema());	
+		  System.out.println("El ordinal es : "+this.actual.getType());
+		  System.out.println("Estoy esperando : "+ClavesServices.TokenTypes.IGUAL.ordinal());
 		  if(!this.match(ClavesServices.TokenTypes.IGUALMAS.ordinal()) 
-				  || !this.match(ClavesServices.TokenTypes.IGUALIGUAL.ordinal())
-				  || !this.match(ClavesServices.TokenTypes.IGUALMENOS.ordinal()))
+				  && !this.match(ClavesServices.TokenTypes.IGUAL.ordinal())
+				  && !this.match(ClavesServices.TokenTypes.IGUALMENOS.ordinal()))
 			  throw new AsintacticoException("Error Sintactico : se esperaba un operador tipo asignacion");
+	  }
+	  
+	  private void llamada() throws AsintacticoException{
+		  this.acceso();
 	  }
 	  
 	  
@@ -366,36 +387,39 @@ public class Asintactico {
 	    //Regla 34
 	    private void expresion() throws AsintacticoException{
 	          this.expresionUnaria();
+	          if(this.siguientesOpBinario())
 	          this.expresionAux();
 	    
 	    }
 	    
 	    //Regla 35
 	    private void expresionAux() throws AsintacticoException{
-	        //cadena no vacia
-	        if(this.actual.getType()!=ClavesServices.TokenTypes.PPY.ordinal()){
+	
 	        	this.operadorBinario();
 	        	this.expresionUnaria();
-	        	this.expresionAux();
-	        }
+	        	if(this.siguientesOpBinario())
+	        		this.expresionAux();
+	       
 	        
 	    
 	    }
 	    //Regla 36
 	    private void operadorBinario() throws AsintacticoException{
+	    	//Esto puede necesitar un refactor
+	    	System.out.println("Estoy esperando operador binario y tengo"+this.actual.getLexema());
 	    	if(!this.match(ClavesServices.TokenTypes.IGUAL.ordinal())
-	    			|| !this.match(ClavesServices.TokenTypes.AND.ordinal())
-	    			|| !this.match(ClavesServices.TokenTypes.IGUALIGUAL.ordinal())
-	    			|| !this.match(ClavesServices.TokenTypes.DIST.ordinal())
-	    			|| !this.match(ClavesServices.TokenTypes.MAY.ordinal())
-	    			|| !this.match(ClavesServices.TokenTypes.MEN.ordinal())
-	    			|| !this.match(ClavesServices.TokenTypes.MENIGUAL.ordinal())
-	    			|| !this.match(ClavesServices.TokenTypes.MAYIGUAL.ordinal())
-	    			|| !this.match(ClavesServices.TokenTypes.MAS.ordinal()) 
-	    			|| !this.match(ClavesServices.TokenTypes.MENOS.ordinal()) 
-	    			|| !this.match(ClavesServices.TokenTypes.POR.ordinal())
-	    			|| !this.match(ClavesServices.TokenTypes.DIV.ordinal())
-	    			|| !this.match(ClavesServices.TokenTypes.MOD.ordinal())
+	    			&& !this.match(ClavesServices.TokenTypes.AND.ordinal())
+	    			&& !this.match(ClavesServices.TokenTypes.IGUALIGUAL.ordinal())
+	    			&& !this.match(ClavesServices.TokenTypes.DIST.ordinal())
+	    			&& !this.match(ClavesServices.TokenTypes.MAY.ordinal())
+	    			&& !this.match(ClavesServices.TokenTypes.MEN.ordinal())
+	    			&& !this.match(ClavesServices.TokenTypes.MENIGUAL.ordinal())
+	    			&& !this.match(ClavesServices.TokenTypes.MAYIGUAL.ordinal())
+	    			&& !this.match(ClavesServices.TokenTypes.MAS.ordinal()) 
+	    			&& !this.match(ClavesServices.TokenTypes.MENOS.ordinal()) 
+	    			&& !this.match(ClavesServices.TokenTypes.POR.ordinal())
+	    			&& !this.match(ClavesServices.TokenTypes.DIV.ordinal())
+	    			&& !this.match(ClavesServices.TokenTypes.MOD.ordinal())
 	    			
 	    			
 	    					)
@@ -405,9 +429,9 @@ public class Asintactico {
 	    
 	    //Regla 37 y 38
 	    private void expresionUnaria() throws AsintacticoException{
+	    	System.out.println("Estoy en expresion unaria");
 	    	if(this.siguientesOpUn())
 	    		this.opUn();
-	    	
 	    	this.operando();
 	    }
 	    
@@ -425,6 +449,7 @@ public class Asintactico {
 
 	    //Regla 40
 	    private void operando() throws AsintacticoException{
+	    	System.out.println("Hola estoy en operando con : "+this.actual.getLexema());
 	       this.literal();
 	       
 	    }
@@ -472,7 +497,7 @@ public class Asintactico {
 	            throw new AsintacticoException("Error Sintactico, se esperaba),"+this.actual.getError());
 	                
 	        }
-	        
+	           
 	        else if(this.actual.getType()==ClavesServices.TokenTypes.THIS.ordinal())
 	            this.accesoThis();
 	        else if(this.actual.getType()==ClavesServices.TokenTypes.idMetVar.ordinal())
@@ -481,11 +506,14 @@ public class Asintactico {
 	            this.llamadaEstatica();
 	        else if(this.actual.getType()==ClavesServices.TokenTypes.NEW.ordinal())
 	            this.accesoCtor();
-	        else throw new AsintacticoException("Error sintactico: se esperaba (,this,idMetVar, idClase o new"+this.actual.getError());
+	        else if(this.actual.getType()==ClavesServices.TokenTypes.STATIC.ordinal())
+	        	this.accesoStatic();
+	        else throw new AsintacticoException("Error 5");
 	        
 	    
 	    }
 	    
+	 
 	     //Regla 47
 	    private void accesoVarMetodo() throws AsintacticoException{
 	        //System.out.println("accesoVarLlamadaMetodo");
@@ -495,6 +523,26 @@ public class Asintactico {
 	        if(this.actual.getType()==ClavesServices.TokenTypes.PPA.ordinal())
 	            this.argsActuales();
 	    
+	    }
+	    
+	    private void accesoStatic() throws AsintacticoException{
+	    	if(!this.match(ClavesServices.TokenTypes.STATIC.ordinal()))
+	    		throw new AsintacticoException("Error");
+	    	if(!this.match(ClavesServices.TokenTypes.idClase.ordinal()))
+	    		throw new AsintacticoException("Error2");
+	    	if(!this.match(ClavesServices.TokenTypes.PP.ordinal()))
+	    		throw new AsintacticoException("Error 3");
+	    	this.accesoMetodo();
+	    	
+	    	
+	    	
+	    }
+	    
+	    private void accesoMetodo() throws AsintacticoException{
+	    	if(!this.match(ClavesServices.TokenTypes.idMetVar.ordinal()))
+	    		throw new AsintacticoException("Error 4");
+	    	this.argsActuales();
+	    	
 	    }
 	    
 	     //Regla 49
@@ -743,7 +791,7 @@ public class Asintactico {
     
     private boolean siguientesTipoAsignacion() {
     	int aux = this.actual.getType();
-    	return(aux==ClavesServices.TokenTypes.IGUALIGUAL.ordinal()
+    	return(aux==ClavesServices.TokenTypes.IGUAL.ordinal()
     			|| aux==ClavesServices.TokenTypes.IGUALMAS.ordinal()
     			|| aux==ClavesServices.TokenTypes.IGUALMENOS.ordinal());
     			
@@ -754,6 +802,36 @@ public class Asintactico {
     	return this.actual.getType()==ClavesServices.TokenTypes.MAS.ordinal() ||
     	           this.actual.getType()==ClavesServices.TokenTypes.MENOS.ordinal() || 
     	            this.actual.getType()==ClavesServices.TokenTypes.NOT.ordinal();
+    	
+    }
+    
+    private boolean siguientesAcceso(){
+    	int _toCompare = this.actual.getType();
+    	return (_toCompare==ClavesServices.TokenTypes.THIS.ordinal() 
+    			|| _toCompare==ClavesServices.TokenTypes.idMetVar.ordinal()
+    			|| _toCompare==ClavesServices.TokenTypes.STATIC.ordinal()
+    			|| _toCompare==ClavesServices.TokenTypes.NEW.ordinal()
+    			|| _toCompare==ClavesServices.TokenTypes.PPA.ordinal()
+    			);
+    }
+    
+    private boolean siguientesOpBinario() {
+    	int _toCompare = this.actual.getType();
+    	return(_toCompare==ClavesServices.TokenTypes.OR.ordinal()
+    			|| _toCompare==ClavesServices.TokenTypes.AND.ordinal()
+    			|| _toCompare==ClavesServices.TokenTypes.IGUALIGUAL.ordinal()
+    			|| _toCompare==ClavesServices.TokenTypes.DIST.ordinal()
+    			|| _toCompare==ClavesServices.TokenTypes.MAY.ordinal()
+    			|| _toCompare==ClavesServices.TokenTypes.MEN.ordinal()
+    			|| _toCompare==ClavesServices.TokenTypes.MAYIGUAL.ordinal()
+    	    	|| _toCompare==ClavesServices.TokenTypes.MENIGUAL.ordinal()
+    	    	|| _toCompare==ClavesServices.TokenTypes.MAS.ordinal()
+    	    	|| _toCompare==ClavesServices.TokenTypes.MENOS.ordinal()
+    	    	|| _toCompare==ClavesServices.TokenTypes.POR.ordinal()
+    	    	|| _toCompare==ClavesServices.TokenTypes.DIV.ordinal()
+    	    	|| _toCompare==ClavesServices.TokenTypes.MOD.ordinal()
+    			);
+    	
     	
     }
     
