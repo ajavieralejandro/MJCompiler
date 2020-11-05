@@ -1,0 +1,25 @@
+//Chequeo de Sentencias
+class A{
+
+dynamic void m1(){
+	//sentencia vacia
+	;
+	//Asignacion
+	this.a = 2;
+	this.a.b += 2;
+	this.a.c -=4;
+	//declaracion de variables
+	int a,b,c,d;
+	//sentencia if
+	if(a!=true) this.a =2
+	else
+	this.a=3;
+	//Setencia while
+	while(a!=2){
+		a = a+1;
+	}
+	//sentencia return
+	return ;
+}
+
+}

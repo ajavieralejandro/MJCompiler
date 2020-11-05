@@ -69,9 +69,11 @@ public class Token {
     }
     
     public String getError(){
-        String toR = " linea : "+this.getLine()+" columna : "+this.getRow()+ "se encontro: "+this.lexema;
-        return toR;
+        return "\n[ERROR:"+this.getLine()+"|"+this.getLexema()+"]";
+       
     }
+    
+    
 
     public void setLine(int line) {
         this.line = line;

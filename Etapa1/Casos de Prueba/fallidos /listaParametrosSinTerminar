@@ -1,7 +1,12 @@
 class A extends B {
  public int azteriz;
  public B aux;
- public A ;
+ public A aux2;
+ public int a1,a2,a3;
+ 
+ A(int a,){
+ 	//Constructor
+ }
 static int met1(){
     this.azteriz += 4;
 	(4+2);

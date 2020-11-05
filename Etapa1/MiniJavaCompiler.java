@@ -26,10 +26,6 @@ public class MiniJavaCompiler {
         PrintWriter writer = null;
         if(args.length==1)
             file = args[0];
-        /*if(args.length==2){
-            file = args[0];
-            fileOut=args[1];
-        }*/
  
         if(file==null || args.length>1)
             System.out.println("Error en los parametros, vuelva a invocar el programa con el archivo correcto o la cantidad de parametros correcta.");
@@ -38,16 +34,7 @@ public class MiniJavaCompiler {
                 if(fileOut!=null)
                     System.out.println("El archivo donde se mostrata el resultado final serÃ¡ : "+fileOut);
             
-            // TODO code application logic here
-            /*
-            Buffer buffer = new Buffer("proob.txt");
-            Character aux = buffer.nextChar();
-            while(aux!= null){
-                System.out.print(aux);
-                aux=buffer.nextChar();
-            }
-            System.out.print("Se llego al fin de archivo");
-            */
+
            
             try{
                 if(fileOut!=null)
