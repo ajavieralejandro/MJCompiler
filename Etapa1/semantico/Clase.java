@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import Claves.ClavesServices;
 import token.Token;
 
 /**
@@ -81,7 +83,6 @@ public class Clase {
        
     
     public void insertarVariableInstancia(VariableInstancia v) throws ASemanticoException{
-        System.out.println("El nombre es : "+v.getNombre());
         if(this.variablesInstancia.containsKey(v.getNombre()))
             throw new ASemanticoException("ERROR SEMANTICO : variable repetida"
                     + v.getToken().getError() );
@@ -206,11 +207,11 @@ public class Clase {
         }
         //Chequeo si mi padre está consolidado
         //SE CONSIDERA POR DEFECTO QUE LA CLASE OBJECT YA ESTA CONSOLIDADA....CHEQUEAR
-        if(this.padre!="OBJECT" && this.padre!= null && this.consolidada!= true){
+        if(this.padre!=ClavesServices.TokenTypes.OBJECT.toString() && this.padre!= null && this.consolidada!= true){
         Clase clasePadre = ts.getClases().get(this.padre);
         //System.out.println("El padre es : "+clasePadre.getId().getLexema());
         if(clasePadre==null)
-            throw new ASemanticoException("La clase padre no esta declarada");
+            throw new ASemanticoException("ERRORSEMANTICO : La clase padre no esta declarada");
         if(clasePadre.isConsolidada()){
             //inserto todas las variables que tengo de mi padre
             for(VariableInstancia var : clasePadre.variablesInstancia.values()){
@@ -228,13 +229,7 @@ public class Clase {
 
         }
         else{
-            //en caso de que mi padre no este consolidado, le digo que se consolide....
-            //System.out.println("Estoy en el caso de que el padre no esta consolidado");
-            clasePadre.consolidar();
-            //Si luego de la consolidación no se consolida, reportamos un error semantico
-            //if(!padre.isConsolidada())
-                //throw new ASemanticoException("Error Semantico: la clase : "+padre.id.getLexema()+" no se pudo consolidar.");
-            //Llamo recursivamente para que se consolide nuevamente
+        	clasePadre.consolidar();
             this.consolidar();
         }
         }
@@ -263,15 +258,15 @@ public class Clase {
                     + ""+aux.getId().getError());
             //Reporto error si las  formas metodos  no coinciden
             if(!aux.getFormaMetodo().equals(met.getFormaMetodo()))
-                throw new ASemanticoException("Error Semantico : Las formas del metodo redefinido no coincide en linea : "+met.getId().getLine());
+                throw new ASemanticoException("Error Semantico : Las formas del metodo redefinido no coincide en linea : "+met.getId().getLine()+met.getId().getError());
             //Reporto error si no tiene la misma cantidad de parametros
             if(aux.getParametros().size()!=met.getParametros().size())
                 throw new ASemanticoException("Error Semantico : la cantidad de parametros en el metodo sobreescrito no coincide con el original metodo :"
-                        + " "+aux.getNombre()+" en linea : "+aux.getId().getLine());
+                        + " "+aux.getNombre()+" en linea : "+aux.getId().getLine()+aux.getId().getError());
             //Ahora tengo que revisar que los tipos y la ubicación de los parametros sean iguales...
             if(!aux.igualParametros(met.getParametros()))
                 throw new ASemanticoException("Error Semantico : los tipos de parametros y su ubicacion en el metodo sobreescrito no coincide con el original metodo :"
-                        + " "+aux.getNombre()+" en linea : "+aux.getId().getLine());
+                        + " "+aux.getNombre()+" en linea : "+aux.getId().getLine()+aux.getId().getError());
             
         }
         //Si paso todos los ifs... agrego el metodo    

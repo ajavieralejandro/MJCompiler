@@ -1,9 +1,0 @@
-class A extends {
- public int azteriz;
-static int met1(){
-    this.azteriz += 4;
-	(4+2);
-	return ;
-}
-
-}

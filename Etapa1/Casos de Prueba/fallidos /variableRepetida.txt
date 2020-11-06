@@ -1,25 +1,17 @@
 class A extends B {
 
-private A a2;
-
-A(B aux){
+A(){
 
 }
 
 static void main(){
 }
 
-static int a1(){
-
-}
-
 }
 
 class B {
 	private A a1;
-	
-	static int a1(){
-	}
+	private B a1;
 
 }
 

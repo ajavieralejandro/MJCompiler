@@ -5,24 +5,43 @@
  */
 package Sintaxis;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Claves.ClavesServices;
+import semantico.Clase;
+import semantico.Ctor;
+import semantico.Metodo;
+import semantico.Parametro;
+import semantico.TDS;
+import semantico.Tipo;
+import semantico.TipoBoolean;
+import semantico.TipoChar;
+import semantico.TipoClase;
+import semantico.TipoInt;
+import semantico.TipoPrimitivo;
+import semantico.TipoString;
+import semantico.Unidad;
+import semantico.VariableInstancia;
 import lexico.Alexico;
 import token.Token;
 import token.TokenException;
+import semantico.ASemanticoException;
 
 /**
  *
  * @author Javier Amorosi
  */
 public class Asintactico {
+	//Variables correspondientes al AS
+	private final TDS tds;
     
     private Token actual; 
     private Alexico alexico;
     
     public Asintactico(String file)throws TokenException{
-            //this.ant = null;
             this.alexico = new Alexico(file);
-            
+            this.tds = new TDS();
             actual = null;
     }
             
@@ -31,24 +50,25 @@ public class Asintactico {
 
     
     
-    public void analize() throws TokenException,AsintacticoException{
+    public void analize() throws TokenException,AsintacticoException,ASemanticoException{
         //Consumo el primer token y empiezo el analisis...
         actual = alexico.nextToken();
         if(this.actual.getType()==ClavesServices.TokenTypes.EOF.ordinal())
         	throw new AsintacticoException("Error: archivo vacio.");
         this.inicial();
+        this.tds.chequeo();
         System.out.println("Compilacion exitosa  \n[SinErrores].");
 
     }
     //Regla 1
-    private void inicial() throws AsintacticoException{
+    private void inicial() throws AsintacticoException,ASemanticoException{
     	this.listaClases();
         if(this.actual.getType()!=ClavesServices.TokenTypes.EOF.ordinal())
             throw new AsintacticoException("Error sintactico en linea :+"+this.actual.getLine()+" Se esperaba fin de archivo y no se lo encontro.\n[ERROR:\"+aux+\"|\"+this.buffer.getLine()+\"]");
 
     }
     //Regla 2
-    private void listaClases() throws AsintacticoException{
+    private void listaClases() throws AsintacticoException,ASemanticoException{
         ////System.out.println("Regla 2");
         if(this.actual.getType() != ClavesServices.TokenTypes.EOF.ordinal()){
             this.clase();
@@ -57,11 +77,17 @@ public class Asintactico {
  
     }
     //Regla 3
-    private void clase() throws AsintacticoException{
+    private void clase() throws AsintacticoException,ASemanticoException{
     
         if(!this.match(ClavesServices.TokenTypes.CLASS.ordinal()))
             throw new AsintacticoException("Error Sintactico en linea : "
         +this.actual.getLine()+"Se esperaba la palabra clave class y se encontro:"+this.actual.getLexema()+"\n[ERROR:"+this.actual.getLexema()+"|"+this.actual.getLine()+"]");
+        //Busco el idClase
+        Token idClase = this.actual;
+        Clase c = new Clase(idClase,this.tds);
+        this.tds.insertarClase(c);
+        this.tds.setClaseActual(c);
+        
          if(!this.match(ClavesServices.TokenTypes.idClase.ordinal()))
              throw new AsintacticoException("Error Sintactico : Se esperaba un idClase y se encontro :"+this.actual.getLexema()+"\n[ERROR:\""+this.actual.getLexema()+"|\""+this.actual.getLine()+"]");
          this.herencia();
@@ -83,15 +109,21 @@ public class Asintactico {
     private void herencia() throws AsintacticoException{
 
         if(this.match(ClavesServices.TokenTypes.EXTENDS.ordinal())){
+        	Token padre = this.actual;
+        	this.tds.getClaseActual().setPadre(padre.getLexema());
             if(!this.match(ClavesServices.TokenTypes.idClase.ordinal()))
                 throw new AsintacticoException("ERROR SINTACTICO : "
                         + "Se esperaba un idClase luego del extends y se encontro : "+this.actual.getLexema()+this.actual.getError());               
         }
+        //Si no hereda de ninguna entonces hereda de Object
+        else
+            this.tds.getClaseActual().setPadre(ClavesServices.TokenTypes.OBJECT.toString());
+        
 
     }
     
     //Regla 5
-    private void listaMiembros() throws AsintacticoException{
+    private void listaMiembros() throws AsintacticoException,ASemanticoException{
 
         //Si lo que viene es distinto a Puntuación Llave que cierra
         if(this.actual.getType()!=ClavesServices.TokenTypes.PLC.ordinal()){
@@ -101,7 +133,7 @@ public class Asintactico {
         
     }
     //Regla 6
-    private void miembro() throws AsintacticoException{
+    private void miembro() throws AsintacticoException,ASemanticoException{
                ////System.out.println("miembro");
 
       
@@ -123,90 +155,133 @@ public class Asintactico {
     
     
     //Regla 7
-    private void atributo()throws AsintacticoException{
-        this.visibilidad();
-        this.tipo();
-        this.listaDecAtrs();
+    private void atributo()throws AsintacticoException,ASemanticoException{
+        Token visibilidad = this.visibilidad();
+        Tipo tipo = this.tipo();
+        List<Token> tokenList = new ArrayList<Token>();
+        this.listaDecAtrs(tokenList);
          if(!this.match(ClavesServices.TokenTypes.PPY.ordinal()))
             throw new AsintacticoException("ERROR SINTACTICO : se esperaba ; en la declaracion de atributos"
                     + " y se encontro : "+this.actual.getLexema()
                     +this.actual.getError());
+         for(Token t : tokenList) {
+        	  //Tengo que encontrar el tipo y no tratarlo como String...
+             VariableInstancia aux = new VariableInstancia(tipo,t.getLexema(),t);
+             aux.setVisibilidad(visibilidad.getLexema());
+             //Tengo que ver si necesito imprimir las variables de instancias
+             //aux.imprimir();
+             this.tds.getClaseActual().insertarVariableInstancia(aux);
+        	 
+         }
         
     
     }
       //Cuando se ingresa a este metodo ya se sabe que el token actual es STATIC O DYNAMIC...
     //Regla 8
-    private void metodo() throws AsintacticoException{
+    private void metodo() throws AsintacticoException,ASemanticoException{
+    	Metodo aIns = new Metodo();
+    	this.tds.setUnidadActual(aIns);
         this.formaMetodo();
         this.tipoMetodo();
+        //Codigo intercalado
+        Token aux = this.actual;
+        aIns.setId(aux);
+        
         if(!this.match(ClavesServices.TokenTypes.idMetVar.ordinal()))
             throw new AsintacticoException("ERROR SINTACTICO : se esperaba un idMetVar y se encontro : "+this.actual.getLexema()+this.actual.getError());
         this.argsFormales();
         this.bloque();
+        //Inserto el metodo
+        this.tds.getClaseActual().insertarMetodo(aIns);
         
     }
 
      //Regla 9
-    private void ctor() throws AsintacticoException{
+    private void ctor() throws AsintacticoException,ASemanticoException{
+    	Ctor aIns = new Ctor();
         ////System.out.println("ctor");
+    	Token aux = this.actual;
+    	aIns.setId(aux);
         if(!this.match(ClavesServices.TokenTypes.idClase.ordinal()))
             throw new AsintacticoException("Error sintactico se esperaba un idClase y se encontro : ."+this.actual.getLexema()
                     +this.actual.getError());
+        this.tds.setUnidadActual(aIns);
         this.argsFormales();
         this.bloque();
+        this.tds.getClaseActual().insertarConstructor(aIns);
         
     }
     //Regla 10
-   private void visibilidad() throws AsintacticoException{
-       
+   private Token visibilidad() throws AsintacticoException{
+       Token toR = this.actual;
        if(!this.match(ClavesServices.TokenTypes.PUBLIC.ordinal()))
                if(!this.match(ClavesServices.TokenTypes.PRIVATE.ordinal()))
                throw new AsintacticoException("ERROR SINTACTICO :"
                        + " se esperaba public,protected o private y se encontro : "+this.actual.getLexema()+this.actual.getError());
+       return toR;
    }
    
    //Regla 11
-   private void tipo() throws AsintacticoException{
-       if(!this.match(ClavesServices.TokenTypes.idClase.ordinal()))
-           this.tipoPrimitivo();
+   private Tipo tipo() throws AsintacticoException{
+	   Tipo toR = null;
+	   Token aux = this.actual;
+       if(this.match(ClavesServices.TokenTypes.idClase.ordinal()))
+    	   toR = new TipoClase(aux,this.tds);
+       else
+    	   toR = this.tipoPrimitivo();
+       return toR;
             
    }
    
    //Regla 12
-   private void tipoPrimitivo()throws AsintacticoException{
+   private TipoPrimitivo tipoPrimitivo()throws AsintacticoException{
+	   Token aux = this.actual;
+       TipoPrimitivo toR = null;
+       if(match(ClavesServices.TokenTypes.INT.ordinal()))
+           toR = new TipoInt(aux);
+       else 
+           if(match(ClavesServices.TokenTypes.CHAR.ordinal()))
+               toR = new TipoChar(aux);
+           else
+               if(match(ClavesServices.TokenTypes.BOOLEAN.ordinal()))
+               toR = new TipoBoolean(aux);
+               else
+                   if(match(ClavesServices.TokenTypes.STRING.ordinal()))
+                   toR = new TipoString(aux);
+                   else
+                	   throw new AsintacticoException("ERROR SINTACTICO:  se Esperaba int char boolean o string"
+                               + " y se encontro :  ,"+this.actual.getLexema()+this.actual.getError());
        
-       boolean aux = match(ClavesServices.TokenTypes.INT.ordinal());
-       if(!aux)
-           aux = match(ClavesServices.TokenTypes.CHAR.ordinal());
-       if(!aux)
-           aux = match(ClavesServices.TokenTypes.BOOLEAN.ordinal());
-       if(!aux)
-           aux = match(ClavesServices.TokenTypes.STRING.ordinal());
-       if(!aux)
-           throw new AsintacticoException("ERROR SINTACTICO:  se Esperaba int char boolean o string"
-                   + " y se encontro :  ,"+this.actual.getLexema()+this.actual.getError());
+       return toR;
+	   
+      
 
    }
     
     //Regla 13
-    private void listaDecAtrs() throws AsintacticoException{
+    private void listaDecAtrs(List tokenList) throws AsintacticoException{
+    
+    	tokenList.add(this.actual);
         if(!this.match(ClavesServices.TokenTypes.idMetVar.ordinal()))
             throw new AsintacticoException("ERROR SINTACTICO : Se esperaba  IdMetVar y se encontro "+this.actual.getLexema()
                     +this.actual.getError());
-        this.listaDecAtrsF();
+        this.listaDecAtrsF(tokenList);
         
     }
     
     //Regla 14
-    private void listaDecAtrsF() throws AsintacticoException{
+    private void listaDecAtrsF(List tokenList) throws AsintacticoException{
         //Si hace match con la coma
         if(this.match(ClavesServices.TokenTypes.PC.ordinal()))
-            this.listaDecAtrs();
+            this.listaDecAtrs(tokenList);
         
     }
     
     //Regla 15
     private void  formaMetodo() throws AsintacticoException{
+    	//Codigo analisis semantico 
+    	Metodo aux = (Metodo) this.tds.getUnidadActual();
+        aux.setFormaMetodo(this.actual.getLexema());
         if(!this.match(ClavesServices.TokenTypes.STATIC.ordinal()))
             if(!this.match(ClavesServices.TokenTypes.DYNAMIC.ordinal()))
                         throw new AsintacticoException("ERROR SINTACTICO :Se esperaba statico o dynamic y se encontro : "+this.actual.getLexema()
@@ -223,7 +298,7 @@ public class Asintactico {
 
     
     //Regla 17
-    private void argsFormales() throws AsintacticoException{
+    private void argsFormales() throws AsintacticoException,ASemanticoException{
                 
         if(!this.match(ClavesServices.TokenTypes.PPA.ordinal()))
                     throw new AsintacticoException("ERROR SINTACTICO: Se esperaban parentesis abiertos y se econtro :"+this.actual.getLexema()
@@ -239,7 +314,7 @@ public class Asintactico {
     }
     
     //Regla 18
-    private void listaArgsFormalesAux() throws AsintacticoException{
+    private void listaArgsFormalesAux() throws AsintacticoException,ASemanticoException{
         //Si lo que vienen no son paréntesis que cierran...
         if(this.actual.getType()!=ClavesServices.TokenTypes.PPC.ordinal())
             this.listaArgsFormales();
@@ -248,21 +323,28 @@ public class Asintactico {
     }
     //Tengo que considerar el caso en que los argumentos sean vacios...
     //Regla 19
-    private void listaArgsFormales() throws AsintacticoException{
+    private void listaArgsFormales() throws AsintacticoException,ASemanticoException{
         this.argFormal();
         this.listaArgsFormalesF();
         
     
     }
     //Regla 20
-    private void listaArgsFormalesF() throws AsintacticoException{
+    private void listaArgsFormalesF() throws AsintacticoException,ASemanticoException{
         if(this.match(ClavesServices.TokenTypes.PC.ordinal()))
             this.listaArgsFormales();
     }
  
     // Regla 21
-    private void argFormal() throws AsintacticoException{
-        this.tipo();
+    private void argFormal() throws AsintacticoException,ASemanticoException{
+        Tipo tipoIns = this.tipo();
+        //Codigo ASemanticoc 
+        Token aux = this.actual;
+        Parametro p = new Parametro(tipoIns,aux.getLexema(),aux);
+        Unidad m = this.tds.getUnidadActual();
+        m.insertarArgumento(p);
+        
+        
         if(!this.match(ClavesServices.TokenTypes.idMetVar.ordinal()))
             throw new AsintacticoException("ERROR SINTACTICO : se esperaba idMetVar y se encontro : "+this.actual.getLexema()+this.actual.getError());
     

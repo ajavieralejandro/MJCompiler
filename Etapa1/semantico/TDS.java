@@ -192,8 +192,7 @@ public class TDS {
         //System.out.println("Estoy en insertar clase"+c.getName());
         if(this.clases.containsKey(c.getName()))
             throw new ASemanticoException("ERROR Semantico : Clase "
-                    + "ya declarada previamente, linea : "+c.getLine()+" "
-                            + " columna : "+c.getRow());
+                    + "ya declarada previamente, linea : "+c.getLine()+c.getToken().getError());
         //Sino la inserto
         this.clases.put(c.getName(), c); 
     }
@@ -213,7 +212,6 @@ public class TDS {
     
     
    private void chequearMain() throws ASemanticoException{
-        
         boolean main=false;
         for(Clase c: clases.values()){
             if(c.Main()){
@@ -222,7 +220,7 @@ public class TDS {
             }
         }
         if(!main)
-            throw new ASemanticoException("Error sintactico: no se encontro metodo main.");      
+            throw new ASemanticoException("Error sintactico: no se encontro metodo main. \n[Error:notMain|0]");      
 
     
     }
@@ -239,28 +237,44 @@ public class TDS {
             
             String padre = c.getPadre();
             String clase = c.getName();
+          
+
       
             while(!clase.equals(ClavesServices.TokenTypes.OBJECT.toString()) &&
                     !padre.equals(ClavesServices.TokenTypes.OBJECT.toString())
-                    && !padre.equals(clase)
+                    && !padre.equals(clase) 
+                    
                     )
                     {
-                //obtengo el padre del padre
-                padre = clases.get(padre).getPadre();
-               
-            }
+                        //obtengo el padre del padre
+                        //Antes de la herencia circular tengo que chequear que todas
+                        //las clases esten declaradas
+                        padre = clases.get(padre).getPadre();
+                        
+                        
+                        
+
+                    }
+        
             
             if(padre!=null && padre.equals(clase))
-                throw new ASemanticoException("Herencia Circular: en clase : "+clase
-                +" en linea "+clases.get(clase).getToken().getLine());
-            
-            
+                throw new ASemanticoException("Error Semantico : herencia Circular: en clase : "+clase
+                +c.getToken().getError());
+ 
         }
+    }
+    
+    private boolean existeClase(String clase) {
+    	return this.clases.containsKey(clase);
     }
     
     public void chequeo() throws ASemanticoException{
         //chequeo que no tenga mains
         this.chequearMain();
+        for(Clase c : this.clases.values())
+        	 if(!this.existeClase(c.getName()))
+             	throw new ASemanticoException("Error Semantico : clase no declarada : "+c.getName()+c.getToken().getError());
+        	
         //Antes chequeo que no haya herencia circular
         this.herenciaCircular();
         

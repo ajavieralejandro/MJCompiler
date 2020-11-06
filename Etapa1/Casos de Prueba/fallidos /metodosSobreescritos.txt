@@ -18,7 +18,7 @@ static int a1(){
 class B {
 	private A a1;
 	
-	static int a1(){
+	static int a1(boolean a){
 	}
 
 }

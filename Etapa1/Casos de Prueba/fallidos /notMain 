@@ -3,9 +3,16 @@ class A extends B {
  public B aux;
  public A aux2;
  public int a1,a2,a3;
- 
- A(int a,){
+
+ A(int a){
  	//Constructor
+ }
+ 
+ static void m1(int a){
+   	(2+2==5);
+ 	return 2+2==5;
+ 	this.m2(2+2,2+2==4);
+ 	
  }
 static int met1(){
     this.azteriz += 4;
@@ -14,3 +21,4 @@ static int met1(){
 }
 
 }
+
