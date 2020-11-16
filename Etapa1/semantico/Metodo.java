@@ -14,6 +14,7 @@ public class Metodo extends Unidad {
     private boolean esfinal;
     
     public Metodo(){
+
         this.esfinal = false;
     }
  
@@ -55,7 +56,9 @@ public class Metodo extends Unidad {
     
     @Override
     public void ControlDeclaraciones() throws ASemanticoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	if(!this.retorno.esTipoValido())
+    		throw new ASemanticoException("Error Semantico : Tipo de retorno no valido"+this.retorno.getToken().getError());
+    	
     }
 
    

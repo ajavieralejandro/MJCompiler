@@ -19,10 +19,18 @@ public class Ctor extends Unidad {
         this.predefinido = predefinido;
     }
     
+    public void ChequearTipos() throws ASemanticoException{
+    	
+    }
+    
 
     @Override
     public void ControlDeclaraciones() throws ASemanticoException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  
+    	if(!this.isPredefinido() && !this.getClase().getName().equals(this.getNombre()))
+    		throw new ASemanticoException("Error Semantico : El nombre del constructor no coincide con el de la clase, se encontro :"+this.getNombre()+this.getId().getError());
+
     }
+ 
     
 }

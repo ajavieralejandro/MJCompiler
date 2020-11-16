@@ -1,6 +1,8 @@
-class A extends B {
+class A extends Object {
 
-private A a2;
+private A a1,a2;
+private int i1;
+private B aux;
 
 A(B aux){
 
@@ -11,15 +13,32 @@ static void main(){
 
 static int a1(){
 
-}
-
-}
-
-class B {
-	private A a1;
+	this.i1 = static A.m1() +2;
+	aux = new B();
+	int i1;
+	i1 = aux.a4;
+	boolean bool;
+	bool = (2*1 + 2 == 4 == true);
 	
-	static int a1(){
+}
+
+static int m1(){
+	return 2;
+}
+
+}
+
+class B extends System{
+
+	B(){}
+
+	public int a4;
+	
+	static C m4(int a1){
+		return ;
 	}
+
+
 
 }
 

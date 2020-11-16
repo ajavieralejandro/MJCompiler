@@ -69,7 +69,7 @@ public class Token {
     }
     
     public String getError(){
-        return "\n[ERROR:"+this.getLine()+"|"+this.getLexema()+"]";
+        return "\n[ERROR:"+this.getLexema()+"|"+this.getLine()+"]";
        
     }
     

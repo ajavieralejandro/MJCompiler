@@ -17,14 +17,12 @@ public abstract class Unidad {
     private Token id;
     private final Map<String,Parametro> parametros;
     private Clase clase;
-    //private ArrayList<Tipo> tiposParametros;
-    //private ArrayList<String> nombresArgumentos;
+
 
     public Unidad(){
         
         this.parametros = new HashMap();
-        //this.tiposParametros = new ArrayList();
-        //this.nombresArgumentos = new ArrayList();
+
     }
     
     public void chequeoTipos() throws ASemanticoException{
@@ -90,8 +88,7 @@ public abstract class Unidad {
         //Se asume que se insertan en orden
         v.setUbicacion(this.parametros.size());
         this.parametros.put(v.getNombre(), v);
-        //this.tiposParametros.add(v.getTipo());
-        //nombresArgumentos.add(v.getValor().getLexema());
+      
 
     }
     

@@ -56,6 +56,13 @@ public class Clase {
          this.constructores.add(c);
      
      }
+     
+     public void controlDeclaraciones() throws ASemanticoException {
+    	 for(Ctor c : this.constructores)
+    		 c.ControlDeclaraciones();
+    	 for (Unidad u : this.metodos.values())
+    		 u.ControlDeclaraciones();
+     }
     
     
 
@@ -207,11 +214,12 @@ public class Clase {
         }
         //Chequeo si mi padre está consolidado
         //SE CONSIDERA POR DEFECTO QUE LA CLASE OBJECT YA ESTA CONSOLIDADA....CHEQUEAR
-        if(this.padre!=ClavesServices.TokenTypes.OBJECT.toString() && this.padre!= null && this.consolidada!= true){
+        if(this.padre!=ClavesServices.TokenTypes.OBJECT.toString() && this.padre!= null && this.consolidada!= true &&
+        		!this.padre.equals("Object")){
+        System.out.println("Estoy en : "+this.getName()+"y voy a controlar que mi padre este declarado :"+this.getPadre());
         Clase clasePadre = ts.getClases().get(this.padre);
-        //System.out.println("El padre es : "+clasePadre.getId().getLexema());
         if(clasePadre==null)
-            throw new ASemanticoException("ERRORSEMANTICO : La clase padre no esta declarada");
+            throw new ASemanticoException("ERRORSEMANTICO : La clase padre no esta declarada"+this.token.getError());
         if(clasePadre.isConsolidada()){
             //inserto todas las variables que tengo de mi padre
             for(VariableInstancia var : clasePadre.variablesInstancia.values()){
@@ -223,6 +231,8 @@ public class Clase {
                 this.insertarRevisado(met);
 
             }
+            
+        
 
             this.consolidada = true;
 

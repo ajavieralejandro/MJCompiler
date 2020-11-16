@@ -46,9 +46,10 @@ public class TDS {
         
         //tengo que definirle un constructor 
         Ctor ctor = new Ctor();
-        ctor.setPredefinido(true);
         aux = new Token(0,ClavesServices.TokenTypes.OBJECT.toString());
         ctor.setId(aux);
+        ctor.setPredefinido(true);
+        ctor.setClase(c);
         c.insertarConstructor(ctor);
         
         this.insertarClase(c);
@@ -66,7 +67,10 @@ public class TDS {
         //Agrego el constructor
         Ctor ctor = new Ctor();
         ctor.setId(aux);
+        ctor.setPredefinido(true);
+        ctor.setClase(c);
         c.insertarConstructor(ctor);
+        
         
         this.insertarClase(c);
         
@@ -240,8 +244,11 @@ public class TDS {
           
 
       
-            while(!clase.equals(ClavesServices.TokenTypes.OBJECT.toString()) &&
-                    !padre.equals(ClavesServices.TokenTypes.OBJECT.toString())
+            while(!clase.equals(ClavesServices.TokenTypes.OBJECT.toString()) 
+            		&&!padre.equals(ClavesServices.TokenTypes.OBJECT.toString())
+            		&&!padre.equals("Object")
+            		&&!padre.equals("System")
+
                     && !padre.equals(clase) 
                     
                     )
@@ -249,7 +256,15 @@ public class TDS {
                         //obtengo el padre del padre
                         //Antes de la herencia circular tengo que chequear que todas
                         //las clases esten declaradas
-                        padre = clases.get(padre).getPadre();
+            			System.out.println("Mi padre es : "+padre);
+            	        Clase aux = clases.get(padre);
+            	        if(aux!=null)
+            	        	padre = aux.getPadre();
+            	        else
+            	        	padre = "Object";
+            			System.out.println("Ahora  es : "+padre);
+
+            	       
                         
                         
                         
@@ -282,6 +297,7 @@ public class TDS {
             if(!c.isConsolidada())
                 c.consolidar();
             c.chequearTipos();
+            c.controlDeclaraciones();
         }
     }
 
