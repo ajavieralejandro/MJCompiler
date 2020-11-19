@@ -28,17 +28,25 @@ static int m1(){
 
 }
 
-class B extends System{
+class B extends A{
+	public int a4;
+
+
+	static int a1(){
+		return 1;
+	}
 
 	B(){}
 
-	public int a4;
-	
-	static C m4(int a1){
-		return ;
+}
+
+class C extends B{
+	static int a1(){
+		return false;
 	}
-
-
-
+	
+	static int m1(int b){
+		return false;
+	}
 }
 

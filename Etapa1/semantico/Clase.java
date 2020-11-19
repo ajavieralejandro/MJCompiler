@@ -277,6 +277,11 @@ public class Clase {
             if(!aux.igualParametros(met.getParametros()))
                 throw new ASemanticoException("Error Semantico : los tipos de parametros y su ubicacion en el metodo sobreescrito no coincide con el original metodo :"
                         + " "+aux.getNombre()+" en linea : "+aux.getId().getLine()+aux.getId().getError());
+            //Me tengo que fijar que los tipos de retorno coincidan
+            if(!aux.getRetorno().equals(met.getRetorno()))
+            		throw new ASemanticoException("Error Semantico : Los tipos de retorno no coinciden en la redefinicion,"
+            				+ "tipo de retorno esperado : "+met.getRetorno().getTipo()+", tipo de retorno encontrado : "+aux.getRetorno().getTipo()+aux.getToken().getError());
+            
             
         }
         //Si paso todos los ifs... agrego el metodo    
