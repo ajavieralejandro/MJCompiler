@@ -256,13 +256,13 @@ public class TDS {
                         //obtengo el padre del padre
                         //Antes de la herencia circular tengo que chequear que todas
                         //las clases esten declaradas
-            			System.out.println("Mi padre es : "+padre);
+            			//System.out.println("Mi padre es : "+padre);
             	        Clase aux = clases.get(padre);
             	        if(aux!=null)
             	        	padre = aux.getPadre();
             	        else
             	        	padre = "Object";
-            			System.out.println("Ahora  es : "+padre);
+            			//System.out.println("Ahora  es : "+padre);
 
             	       
                         

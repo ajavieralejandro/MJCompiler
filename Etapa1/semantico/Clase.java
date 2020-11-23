@@ -112,8 +112,8 @@ public class Clase {
     public void insertarMetodo(Metodo m) throws ASemanticoException{
         
         if(this.metodos.containsKey(m.getNombre()))
-            throw new ASemanticoException("Error Semantico: metodo repetido"
-                    + " , "+m.getToken().getError() );
+            throw new ASemanticoException("Error Semantico: metodo repetido : "+m.getNombre()
+                    +m.getToken().getError() );
         //Inserto el metodo en el mapeo 
         this.metodos.put(m.getNombre(), m);
         
@@ -216,7 +216,7 @@ public class Clase {
         //SE CONSIDERA POR DEFECTO QUE LA CLASE OBJECT YA ESTA CONSOLIDADA....CHEQUEAR
         if(this.padre!=ClavesServices.TokenTypes.OBJECT.toString() && this.padre!= null && this.consolidada!= true &&
         		!this.padre.equals("Object")){
-        System.out.println("Estoy en : "+this.getName()+"y voy a controlar que mi padre este declarado :"+this.getPadre());
+        //System.out.println("Estoy en : "+this.getName()+"y voy a controlar que mi padre este declarado :"+this.getPadre());
         Clase clasePadre = ts.getClases().get(this.padre);
         if(clasePadre==null)
             throw new ASemanticoException("ERRORSEMANTICO : La clase padre no esta declarada"+this.token.getError());
@@ -267,8 +267,10 @@ public class Clase {
                 throw new ASemanticoException("Error semantico : la clase redefine un metodo final : "
                     + ""+aux.getId().getError());
             //Reporto error si las  formas metodos  no coinciden
-            if(!aux.getFormaMetodo().equals(met.getFormaMetodo()))
+            if(!aux.getFormaMetodo().equals(met.getFormaMetodo())) {
+            	System.out.println("Las formas metodos son : "+aux.getFormaMetodo()+" Y : "+met.getFormaMetodo());
                 throw new ASemanticoException("Error Semantico : Las formas del metodo redefinido no coincide en linea : "+met.getId().getLine()+met.getId().getError());
+            }
             //Reporto error si no tiene la misma cantidad de parametros
             if(aux.getParametros().size()!=met.getParametros().size())
                 throw new ASemanticoException("Error Semantico : la cantidad de parametros en el metodo sobreescrito no coincide con el original metodo :"

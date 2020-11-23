@@ -1,0 +1,35 @@
+class B extends System{
+
+	static void println(){
+		
+	}
+	
+	static int read(){
+		return 2;
+	}
+	
+	static void printC(char c){
+		
+	}
+	
+	static void printI(int i){
+	}
+	
+	static void printS(String s){}
+
+	
+	static void printBln(boolean b){}
+	
+	static void printCln(char c){}
+	
+	
+	static void printIln(int i){}
+	static void printSln(String s){}
+	
+	
+	static void main(){
+	
+	}
+
+
+}

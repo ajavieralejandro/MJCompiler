@@ -1,5 +1,6 @@
 package semantico;
 
+import Claves.ClavesServices;
 import token.Token;
 
 /**
@@ -12,6 +13,9 @@ public class TipoClase extends TipoReferencia {
     private final TDS ts;
     
     public TipoClase(Token tipo, TDS ts){
+    	//Fixing bug in Object
+    	if(tipo.getLexema().equals("Object"))
+    		tipo.setLexema(ClavesServices.TokenTypes.OBJECT.toString());
         this.tipo = tipo;
         this.ts = ts;
     }

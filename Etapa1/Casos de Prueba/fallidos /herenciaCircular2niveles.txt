@@ -1,12 +1,6 @@
-class A extends A{
-
-	A(){}
-
+class A extends D{
 	static void main(){
 	}
-	
-
-	
 }
 
 class B extends A{
@@ -16,4 +10,6 @@ class C extends B{
 
 }
 
+class D extends C{
 
+}

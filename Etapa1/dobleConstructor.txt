@@ -1,11 +1,15 @@
-class A extends A{
+class A extends Object{
 
 	A(){}
-
+	A(int a,int b){
+	}
 	static void main(){
 	}
 	
-
+	static A mA(int i){
+		return this;
+	}
+	
 	
 }
 

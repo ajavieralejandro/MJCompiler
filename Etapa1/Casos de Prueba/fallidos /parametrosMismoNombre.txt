@@ -1,0 +1,21 @@
+class A extends Object{
+	static void main(){
+	}
+	
+	static A mA(int i){
+		return this;
+	}
+	
+		static B mB(int i,boolean i){
+		return null;
+	}
+}
+
+class B extends A{
+}
+
+class C extends B{
+
+}
+
+

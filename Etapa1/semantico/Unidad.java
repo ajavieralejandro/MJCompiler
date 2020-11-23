@@ -84,7 +84,7 @@ public abstract class Unidad {
         //Chequeamos que el nombre del parametro no sea el mismo que otro
         if(this.parametros.containsKey(v.getNombre()))
             throw new ASemanticoException("Nombre de parametro repetido en linea :"
-                    +v.getToken().getLine()+" ,valor :"+v.getToken().getLexema());
+                    +v.getToken().getLine()+" ,valor :"+v.getToken().getLexema()+v.getToken().getError());
         //Se asume que se insertan en orden
         v.setUbicacion(this.parametros.size());
         this.parametros.put(v.getNombre(), v);

@@ -231,6 +231,7 @@ public class Asintactico {
 	   Token aux = this.actual;
        if(this.match(ClavesServices.TokenTypes.idClase.ordinal()))
     	   toR = new TipoClase(aux,this.tds);
+       
        else
     	   toR = this.tipoPrimitivo();
        return toR;
@@ -283,14 +284,16 @@ public class Asintactico {
     
     //Regla 15
     private void  formaMetodo() throws AsintacticoException{
-    	//Codigo analisis semantico 
     	Metodo aux = (Metodo) this.tds.getUnidadActual();
-        aux.setFormaMetodo(this.actual.getLexema());
-        if(!this.match(ClavesServices.TokenTypes.STATIC.ordinal()))
-            if(!this.match(ClavesServices.TokenTypes.DYNAMIC.ordinal()))
-                        throw new AsintacticoException("ERROR SINTACTICO :Se esperaba statico o dynamic y se encontro : "+this.actual.getLexema()
-                                +this.actual.getError());
-
+        if(this.match(ClavesServices.TokenTypes.STATIC.ordinal()))
+        	aux.setFormaMetodo(ClavesServices.TokenTypes.STATIC.toString());
+        else
+        	if(this.match(ClavesServices.TokenTypes.DYNAMIC.ordinal()))
+            	aux.setFormaMetodo(ClavesServices.TokenTypes.DYNAMIC.toString());
+            	else
+            		 throw new AsintacticoException("ERROR SINTACTICO :Se esperaba statico o dynamic y se encontro : "+this.actual.getLexema()
+                     +this.actual.getError());
+        
     }
     
     //Regla 16

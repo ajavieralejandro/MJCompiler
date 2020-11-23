@@ -1,12 +1,10 @@
-class A extends A{
-
-	A(){}
-
+class A extends Object{
 	static void main(){
 	}
 	
-
-	
+	static A mA(int i){
+		return this;
+	}
 }
 
 class B extends A{
@@ -16,4 +14,6 @@ class C extends B{
 
 }
 
+class A{
 
+}

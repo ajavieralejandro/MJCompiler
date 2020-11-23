@@ -1,6 +1,6 @@
-class A extends A{
+class A extends Object{
 
-	A(){}
+	A(D i){}
 
 	static void main(){
 	}
