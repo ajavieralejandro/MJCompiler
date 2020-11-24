@@ -28,7 +28,7 @@ public class Ctor extends Unidad {
     public void ControlDeclaraciones() throws ASemanticoException {
   
     	if(!this.isPredefinido() && !this.getClase().getName().equals(this.getNombre()))
-    		throw new ASemanticoException("Error Semantico : El nombre del constructor no coincide con el de la clase, se encontro :"+this.getNombre()+this.getId().getError());
+    		throw new ASemanticoException("Error Semantico : El nombre del constructor no coincide con el de la clase, se encontro :"+this.getNombre()+"."+this.getId().getError());
 
     }
  

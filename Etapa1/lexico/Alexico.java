@@ -40,7 +40,7 @@ public class Alexico {
             this.isEOF = false;
         }
         catch(FileNotFoundException e){
-            throw new TokenException("No se pudo abrir el archivo : "+fileName);
+            throw new TokenException("Error : No se pudo abrir el archivo : "+fileName+"\n[ERROR:archivo|0]");
         
         }
         
@@ -63,7 +63,7 @@ public class Alexico {
                                 
             //si no reconocio el estado entonces quiere decir que hay un error.
             if(this.estado==null)
-                throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+this.charActual+" no es simbolo valido \n [ERROR:"+this.charActual+"|"+this.buffer.getLine()+"] ");
+                throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+this.charActual+" no es simbolo valido \n[ERROR:"+this.charActual+"|"+this.buffer.getLine()+"] ");
             //Construyo el Token a ser retornado.    
             Token toR = null;
             //cicla hasta armar el Token a retornar si llega a fin de archivo retorna el respectivo token EOF.

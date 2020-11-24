@@ -28,6 +28,8 @@ public class Clase {
     
      public Clase(Token token,TDS ts){
         this.ts = ts;
+        if(token.getLexema().equals("Object"))
+        	token.setLexema(ClavesServices.TokenTypes.OBJECT.toString());
         this.token = token;
         this.variablesInstancia = new HashMap<>();
         this.constructores = new ArrayList<Ctor>();
@@ -219,7 +221,7 @@ public class Clase {
         //System.out.println("Estoy en : "+this.getName()+"y voy a controlar que mi padre este declarado :"+this.getPadre());
         Clase clasePadre = ts.getClases().get(this.padre);
         if(clasePadre==null)
-            throw new ASemanticoException("ERRORSEMANTICO : La clase padre no esta declarada"+this.token.getError());
+            throw new ASemanticoException("Error Semantico : La clase padre no esta declarada"+this.token.getError());
         if(clasePadre.isConsolidada()){
             //inserto todas las variables que tengo de mi padre
             for(VariableInstancia var : clasePadre.variablesInstancia.values()){

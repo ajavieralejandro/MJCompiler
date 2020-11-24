@@ -8,6 +8,8 @@ public class TDS {
 	private  Map<String, Clase> clases = null;
     private Clase claseActual;
     private Unidad unidadActual;
+    private static TDS INSTANCE = null;
+
 
     public Clase getClaseActual() {
         return claseActual;
@@ -16,10 +18,21 @@ public class TDS {
     public void setClaseActual(Clase claseActual) {
         this.claseActual = claseActual;
     }
+    
+    public static TDS getInstance() {
+        if (INSTANCE == null) createInstance();
+        return INSTANCE;
+    }
+    
+    private  static void createInstance() {
+        if (INSTANCE == null) { 
+            INSTANCE = new TDS();
+        }
+    }
    
     
     
-    public TDS(){
+    private TDS(){
         this.clases = new Hashtable<>();
         try{
                 //Inserto las clases que ya vienen creadas por defecto
@@ -224,7 +237,7 @@ public class TDS {
             }
         }
         if(!main)
-            throw new ASemanticoException("Error sintactico: no se encontro metodo main. \n[Error:notMain|0]");      
+            throw new ASemanticoException("Error semantico: no se encontro metodo main. \n[Error:main|0]");      
 
     
     }
