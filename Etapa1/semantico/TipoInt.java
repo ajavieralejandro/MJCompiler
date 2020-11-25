@@ -32,5 +32,13 @@ public class TipoInt extends TipoPrimitivo {
     public String getTipo(){
         return ClavesServices.TokenTypes.INT.toString();
     }
+
+	@Override
+	public boolean esCompatible(TipoBase e) {
+		boolean toR = false;
+		if(e.getTipo().equals(ClavesServices.TokenTypes.INT.toString()))
+			toR = true;
+		return toR;
+	}
     
 }

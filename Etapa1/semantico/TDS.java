@@ -305,7 +305,7 @@ public class TDS {
         	
         //Antes chequeo que no haya herencia circular
         this.herenciaCircular();
-        
+    
         for(Clase c : this.clases.values()){
             if(!c.isConsolidada())
                 c.consolidar();
@@ -313,6 +313,26 @@ public class TDS {
             c.controlDeclaraciones();
         }
     }
+    
+    public boolean sonCompatibles(TipoBase c1, TipoBase c2){
+    	
+        String tipoC1 = c1.getTipo();
+        String tipoC2 = c2.getTipo();
+        
+        //Puede ser que tenga que chequear que las clases también existas antes de realizar esta busqueda...
+        	
+        //Mientras que no sean iguales o el tipo de c2 no sea object
+        while(!tipoC1.equals(tipoC2)
+                && !tipoC2.equals("Object"))
+        {
+            //En algun momento llego a Object o a c1
+            tipoC2 = this.clases.get(tipoC2).getPadre();
+        
+        }
+        //Chequear Esta expresion
+        return (tipoC1.equals(tipoC2));
+    }
+    
 
 }
 

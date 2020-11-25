@@ -33,5 +33,13 @@ public class TipoChar extends TipoPrimitivo {
     public String getTipo() {
         return ClavesServices.TokenTypes.CHAR.toString();
     }
+
+	@Override
+	public boolean esCompatible(TipoBase e) {
+		boolean toR = false;
+		if(e.getTipo().equals(ClavesServices.TokenTypes.CHAR.toString()))
+			toR = true;
+		return toR;
+	}
     
 }

@@ -28,5 +28,13 @@ public class TipoNull extends TipoReferencia {
     public boolean esTipoValido() {
         return true;
     }
+
+	@Override
+	public boolean esCompatible(TipoBase e) {
+		boolean toR = false;
+		if(e.esTipoClase())
+			toR = true;
+		return toR;
+	}
     
 }

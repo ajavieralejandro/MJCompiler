@@ -37,5 +37,13 @@ public class TipoBoolean extends TipoPrimitivo {
     public boolean esTipoValido() {
         return true;
     }
+
+	@Override
+	public boolean esCompatible(TipoBase e) {
+		boolean toR = false;
+		if(e.getTipo().equals(ClavesServices.TokenTypes.BOOLEAN.toString()))
+			toR = true;
+		return toR;
+	}
     
 }

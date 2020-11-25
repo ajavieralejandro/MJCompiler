@@ -35,5 +35,11 @@ public class TipoVoid extends TipoBase {
     public boolean esTipoValido() {
         return true;
     }
+
+	@Override
+	public boolean esCompatible(TipoBase e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
     
 }

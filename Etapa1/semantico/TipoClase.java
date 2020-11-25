@@ -34,5 +34,18 @@ public class TipoClase extends TipoReferencia {
     public boolean esTipoValido() {
         return ts.getClases().containsKey(this.getTipo());
     }
+     
+     public boolean esTipoClase(){
+         return true;
+     }
+
+	@Override
+	public boolean esCompatible(TipoBase e) {
+		boolean toR = false;
+		if(e.getTipo().equals(ClavesServices.TokenTypes.NULL.toString()))
+			toR = true;
+		toR = ts.sonCompatibles(this, e);
+		return toR;
+	}
     
 }

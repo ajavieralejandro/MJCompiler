@@ -40,7 +40,7 @@ public class Alexico {
             this.isEOF = false;
         }
         catch(FileNotFoundException e){
-            throw new TokenException("Error : No se pudo abrir el archivo : "+fileName+"\n[ERROR:archivo|0]");
+            throw new TokenException("Error : No se pudo abrir el archivo : "+fileName+"\n[Error:archivo|0]");
         
         }
         
@@ -63,7 +63,7 @@ public class Alexico {
                                 
             //si no reconocio el estado entonces quiere decir que hay un error.
             if(this.estado==null)
-                throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+this.charActual+" no es simbolo valido \n[ERROR:"+this.charActual+"|"+this.buffer.getLine()+"] ");
+                throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+this.charActual+" no es simbolo valido \n[Error:"+this.charActual+"|"+this.buffer.getLine()+"] ");
             //Construyo el Token a ser retornado.    
             Token toR = null;
             //cicla hasta armar el Token a retornar si llega a fin de archivo retorna el respectivo token EOF.
@@ -87,7 +87,7 @@ public class Alexico {
                             this.buffer.consumirLinea();
                             throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" :"
                             		+ " "+aux+" no es un valido para formar un caracter \n"
-                            				+ "[ERROR:"+aux+"|"+this.buffer.getLine()+"] ");                        	
+                            				+ "[Error:"+aux+"|"+this.buffer.getLine()+"] ");                        	
                         }
                         
                         	
@@ -121,7 +121,7 @@ public class Alexico {
                             char aux = this.charActual;
                             this.limpiarBuffer();
                             this.buffer.consumirLinea();
-                            throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba ' para cerrar el caracter \n[ERROR:"+aux+"|"+this.buffer.getLine()+"] ");
+                            throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba ' para cerrar el caracter \n[Error:"+aux+"|"+this.buffer.getLine()+"] ");
 
 
                         	
@@ -154,7 +154,7 @@ public class Alexico {
                            char aux = this.charActual;
                     	   this.limpiarBuffer();
                            this.buffer.consumirLinea();
-                           throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba un caracter una letra o underscore \n[ERROR:"+aux+"|"+this.buffer.getLine()+"] ");
+                           throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba un caracter una letra o underscore \n[Error:"+aux+"|"+this.buffer.getLine()+"] ");
                        }
                         break;
 
@@ -184,7 +184,7 @@ public class Alexico {
                     	   char aux = this.charActual;
                     	   this.limpiarBuffer();
                            this.buffer.consumirLinea();
-                           throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba un caracter una letra o underscore \n[ERROR:"+aux+"|"+this.buffer.getLine()+"] ");
+                           throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba un caracter una letra o underscore \n[Error:"+aux+"|"+this.buffer.getLine()+"] ");
                            
 
                     	   
@@ -231,7 +231,7 @@ public class Alexico {
                         //llego a fin de archivo
                         if(this.charActual==null) {
                         	this.isEOF = true;
-                            throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : comentario multilinea sin cerrar \n[ERROR:|"+this.buffer.getLine()+"] ");
+                            throw new TokenException("Errorléxico: en linea  "+this.buffer.getLine()+" : comentario multilinea sin cerrar \n[Error:|"+this.buffer.getLine()+"] ");
                             }
                         if(this.charActual=='\n'){
                             this.limpiarBuffer();
@@ -246,7 +246,7 @@ public class Alexico {
                          //llego a fin de archivo
                         if(this.charActual==null) {
                         	this.isEOF = true;
-                            throw new TokenException("Error léxico en linea :  comentario multilinea sin cerrar \n[ERROR:|"+this.buffer.getLine()+"] ");
+                            throw new TokenException("Errorléxico: en linea  comentario multilinea sin cerrar \n[Error:|"+this.buffer.getLine()+"] ");
                             }
                         else{
                             if(this.charActual=='*')
@@ -261,7 +261,7 @@ public class Alexico {
                         this.consumirCaracter();
                         if(this.charActual==null) {
                         	this.isEOF = true;
-                            throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : comentario multilinea sin cerrar \n[ERROR:|"+this.buffer.getLine()+"] ");
+                            throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : comentario multilinea sin cerrar \n[Error:|"+this.buffer.getLine()+"] ");
                  
                         }
                         
@@ -288,7 +288,7 @@ public class Alexico {
                         	char aux = this.charActual;
                         	this.limpiarBuffer();
                             this.buffer.consumirLinea();
-                            throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : se esperaba"+'"'+" para cerrar la cadena \n[ERROR:|"+this.buffer.getLine()+"] ");
+                            throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : se esperaba"+'"'+" para cerrar la cadena \n[Error:|"+this.buffer.getLine()+"] ");
 
                         }
                          
@@ -344,7 +344,7 @@ public class Alexico {
                     	   char aux = this.charActual;
                     	   this.limpiarBuffer();
                            this.buffer.consumirLinea();
-                           throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba un digito \n[ERROR:"+aux+"|"+this.buffer.getLine()+"] ");
+                           throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba un digito \n[Error:"+aux+"|"+this.buffer.getLine()+"] ");
                        }
                        //si no es un caracter entonces tengo que retornar el token resultante
                             else{
@@ -498,7 +498,7 @@ public class Alexico {
                         	char aux = this.charActual;
                         	this.limpiarBuffer();
                             this.buffer.consumirLinea();
-                            throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba & \n[ERROR:"+aux+"|"+this.buffer.getLine()+"] ");
+                            throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba & \n[Error:"+aux+"|"+this.buffer.getLine()+"] ");
 
                         }
                         this.limpiarBuffer();
@@ -513,7 +513,7 @@ public class Alexico {
                         	char aux = this.charActual;
                         	this.limpiarBuffer();
                             this.buffer.consumirLinea();
-                            throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba | \n[ERROR:"+aux+"|"+this.buffer.getLine()+"] ");
+                            throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" se esperaba | \n[Error:"+aux+"|"+this.buffer.getLine()+"] ");
 
                         }
                         this.limpiarBuffer();
@@ -602,7 +602,7 @@ public class Alexico {
                     	char aux = this.charActual;
                     	this.limpiarBuffer();
                         this.buffer.consumirLinea();
-                        throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" no es simbolo valido \n [ERROR:"+aux+"|"+this.buffer.getLine()+"] ");
+                        throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" no es simbolo valido \n [Error:"+aux+"|"+this.buffer.getLine()+"] ");
         
                     }
                 }
@@ -691,7 +691,7 @@ public class Alexico {
             	char aux = this.charActual;
             	this.limpiarBuffer();
                 this.buffer.consumirLinea();
-                throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" no es simbolo valido \n [ERROR:"+aux+"|"+this.buffer.getLine()+"] ");
+                throw new TokenException("Error léxico en linea : "+this.buffer.getLine()+" : "+aux+" no es simbolo valido \n [Error:"+aux+"|"+this.buffer.getLine()+"] ");
             }
             else 
                 this.beginRow = this.buffer.getRow() + this.cantTab*8 - this.cantTab;
