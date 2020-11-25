@@ -44,7 +44,8 @@ public class TipoClase extends TipoReferencia {
 		boolean toR = false;
 		if(e.getTipo().equals(ClavesServices.TokenTypes.NULL.toString()))
 			toR = true;
-		toR = ts.sonCompatibles(this, e);
+		if(e.esTipoClase() && this.esTipoClase())
+			toR = ts.sonCompatibles(this, e);
 		return toR;
 	}
     
