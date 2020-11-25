@@ -1,0 +1,15 @@
+class A extends System{
+
+	private int aux1,aux2;
+
+	A(int a,int b){
+	
+		this.aux1= a;
+		this.aux2 = b;
+	
+	}
+	
+	static void main(){
+	
+	}
+}

@@ -9,11 +9,10 @@ A(B aux){
 static void main(){
 }
 
-static int a1(){
+
 
 }
 
-}
 
 class B {
 	private A a1;
@@ -21,5 +20,12 @@ class B {
 	static int a1(boolean a){
 	}
 
+}
+
+class C extends A{
+
+static int a1(){
+
+}
 }
 
