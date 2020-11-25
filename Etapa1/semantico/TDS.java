@@ -1,5 +1,7 @@
 package semantico;
 import Claves.ClavesServices;
+import semantico2.NodoBloque;
+
 import java.util.Hashtable;
 import java.util.Map;
 import token.Token;
@@ -9,6 +11,8 @@ public class TDS {
     private Clase claseActual;
     private Unidad unidadActual;
     private static TDS INSTANCE = null;
+    private NodoBloque bloqueActual;
+
 
 
     public Clase getClaseActual() {
@@ -28,6 +32,10 @@ public class TDS {
         if (INSTANCE == null) { 
             INSTANCE = new TDS();
         }
+    }
+    
+    public void setBloqueActual(NodoBloque bloqueActual) {
+        this.bloqueActual = bloqueActual;
     }
    
     

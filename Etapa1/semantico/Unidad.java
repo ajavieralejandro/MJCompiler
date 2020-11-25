@@ -35,6 +35,10 @@ public abstract class Unidad {
     
     }
     
+    public Map<String,Parametro> getParamMap(){
+    	return this.parametros;
+    }
+    
        
     public boolean igualParametros(Collection<Parametro> c){
         boolean toR = true;

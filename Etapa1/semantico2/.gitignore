@@ -3,3 +3,10 @@
 /NodoWhile.class
 /ASTException.class
 /NodoExpresion.class
+/NodoSentenciaAsignacion.class
+/NodoBloque.class
+/NodoSentSimple.class
+/NodoReturn.class
+/NodoDecVarLocales.class
+/NodoIf.class
+/NodoSentenciaSimple.class

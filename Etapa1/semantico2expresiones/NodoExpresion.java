@@ -1,6 +1,7 @@
-package semantico2;
+package semantico2expresiones;
 
 import semantico.TipoBase;
+import semantico2.ASTException;
 import token.Token;
 
 /**

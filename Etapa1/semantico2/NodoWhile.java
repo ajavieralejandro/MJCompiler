@@ -1,5 +1,6 @@
 package semantico2;
 import semantico.TipoBoolean;
+import semantico2expresiones.NodoExpresion;
 
 public class NodoWhile extends NodoSentencia {
 
@@ -26,8 +27,8 @@ public class NodoWhile extends NodoSentencia {
     public void check() throws ASTException {
 
         if(!this.condicion.check().esCompatible(new TipoBoolean()))
-            throw new ASTException("Error Semantico: Se espera que la condición dentro del while se ade tipo boolean"
-                    + "en linea : "+this.condicion.getToken().getLine()+" columna : "+this.condicion.getToken().getRow());
+            throw new ASTException("Error Semantico: Se espera que la condición dentro del while sea tipo boolean,"
+                    + "y se encontro : "+this.condicion.check().getTipo()+this.condicion.getToken().getError());
         this.sentencia.check();
     }
 }
