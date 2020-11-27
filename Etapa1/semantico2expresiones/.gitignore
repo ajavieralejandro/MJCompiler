@@ -1,1 +1,15 @@
 /NodoExpresion.class
+/NodoExpBinaria.class
+/NodoExpUnaria.class
+/NodoOperando.class
+/NodoPrimario.class
+/NodoLiteral.class
+/NodoExpParentizada.class
+/NodoThis.class
+/NodoVar.class
+/NodoLlamadaEstatica.class
+/NodoLlamadaDirecta.class
+/NodoCtor.class
+/Encadenado.class
+/NodoLlamadaEncadenada.class
+/NodoIdEncadenado.class

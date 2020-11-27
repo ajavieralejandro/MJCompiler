@@ -3,8 +3,11 @@ package semantico;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+
 import token.Token;
 
 /**
@@ -96,7 +99,26 @@ public abstract class Unidad {
 
     }
     
+    //Testear, hay que tener la certeza de que las dos colecciones tienen la misma cantidad
+    public boolean igualTipoParametros(Collection<TipoBase> tipos){
+        
+        boolean toR = true;
+        Iterator<TipoBase> it = tipos.iterator();
+        for(Parametro p : this.getParametros()){
+            if(it.hasNext())
+                if(!p.getTipo().esCompatible(it.next())){
+                    toR = false;
+                    break;
+                }           
+        }
+        
+        return toR;
+    
+    }
+    
     
     public abstract void ControlDeclaraciones() throws ASemanticoException;
+    public abstract String getFormaMetodo();
+
         
 }

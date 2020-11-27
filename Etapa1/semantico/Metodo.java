@@ -17,6 +17,11 @@ public class Metodo extends Unidad {
 
         this.esfinal = false;
     }
+    
+    public boolean isVoid(){
+        return this.getRetorno().esCompatible(new TipoVoid());
+    
+    }
  
 
  

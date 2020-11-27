@@ -65,6 +65,17 @@ public class Clase {
     	 for (Unidad u : this.metodos.values())
     		 u.ControlDeclaraciones();
      }
+     
+     public Ctor getConstructor(int params){
+         Ctor toR = null;
+         for(Ctor c : this.constructores){
+             if(c.getParametros().size()==params)
+                 toR= c;
+                 break;
+         }
+         return toR;
+     }
+      
     
     
 
@@ -291,6 +302,20 @@ public class Clase {
         //Si paso todos los ifs... agrego el metodo    
         this.metodos.put(met.getNombre(),met);
     }
+    
+    public TipoClase getTipo(){
+        return new TipoClase(this.token,this.ts);
+    
+    }
+    
+    public Map<String,Metodo> getMetodos(){
+        return this.metodos;
+    }
+    
+    public Map<String,VariableInstancia> getVariablesInstancia(){
+        return this.variablesInstancia;
+      
+   }
     
    
 

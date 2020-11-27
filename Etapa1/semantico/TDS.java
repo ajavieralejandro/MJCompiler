@@ -341,6 +341,32 @@ public class TDS {
         return (tipoC1.equals(tipoC2));
     }
     
+    //Si la clase c2 desciende de la clase c1... 
+    //Testear este metodo
+    /**
+     * Chequea que la clase c1 descienda de c2
+     * @param c1
+     * @param c2
+     * @return 
+     */
+    public boolean heredaDe(Clase c1,Clase c2){
+        boolean toR = false;
+        if(c1.getTipo().getTipo().equals("Object"))
+            toR = true;
+        if(c1.getTipo().getTipo().equals(c2.getTipo().getTipo()))
+            toR = true;
+        
+        while(!toR && !c2.getTipo().getTipo().equals("Object")){
+            c2 = this.getClases().get(c2.getPadre());
+            if(c1.getTipo().getTipo().equals(c2.getTipo().getTipo()))
+                toR = true;     
+        }
+        
+        return toR;
+        
+    }
+    
+    
 
 }
 

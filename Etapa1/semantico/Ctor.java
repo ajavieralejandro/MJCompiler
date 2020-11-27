@@ -1,5 +1,6 @@
 package semantico;
 
+import Claves.ClavesServices;
 
 /**
  *
@@ -31,6 +32,12 @@ public class Ctor extends Unidad {
     		throw new ASemanticoException("Error Semantico : El nombre del constructor no coincide con el de la clase, se encontro :"+this.getNombre()+"."+this.getId().getError());
 
     }
+
+	@Override
+	public String getFormaMetodo() {
+		//Se decide que es dynamic aunque esto no sea cierto, para que las unidades no ingresen
+		return ClavesServices.TokenTypes.DYNAMIC.toString();
+	}
  
     
 }
