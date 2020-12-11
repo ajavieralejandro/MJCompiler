@@ -3,6 +3,7 @@ package semantico2;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import semantico.Tipo;
 import semantico.VarLocal;
 
 /**
@@ -13,9 +14,11 @@ public class NodoDecVarLocales extends NodoSentencia {
    //Por ahora uso la clase variable...
    private ArrayList<VarLocal> variablesLocales;
    private final NodoBloque bloque;
+   private Tipo _tipo;
    
    public NodoDecVarLocales(NodoBloque bloque){
        this.bloque = bloque;
+       this.variablesLocales = new ArrayList<VarLocal>();
       
    }
 
@@ -25,6 +28,10 @@ public class NodoDecVarLocales extends NodoSentencia {
 
    public void setVariablesLocales(ArrayList<VarLocal> variablesLocales) {
        this.variablesLocales = variablesLocales;
+   }
+   
+   public void insertVariableLocal(VarLocal v) {
+	   this.variablesLocales.add(v);
    }
    
    private void recorrerVariables () throws ASTException{
@@ -99,5 +106,13 @@ public class NodoDecVarLocales extends NodoSentencia {
        }
        
    }
+
+public Tipo get_tipo() {
+	return _tipo;
+}
+
+public void set_tipo(Tipo _tipo) {
+	this._tipo = _tipo;
+}
    
 }

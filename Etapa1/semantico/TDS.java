@@ -366,6 +366,10 @@ public class TDS {
         
     }
     
+    public NodoBloque getBloqueActual() {
+    	return this.bloqueActual;
+    }
+    
     
 
 }

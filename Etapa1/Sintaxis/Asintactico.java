@@ -6,7 +6,23 @@
 package Sintaxis;
 
 import java.util.ArrayList;
+import semantico2.NodoBloque;
+import semantico2.NodoDecVarLocales;
+import semantico2.NodoIf;
+import semantico2.NodoPComa;
+import semantico2.NodoSentencia;
+import semantico2.NodoSentenciaAsignacion;
+import semantico2expresiones.Encadenado;
+import semantico2expresiones.NodoExpBinaria;
+import semantico2expresiones.NodoExpParentizada;
+import semantico2expresiones.NodoExpUnaria;
+import semantico2expresiones.NodoExpresion;
+import semantico2expresiones.NodoLiteral;
+import semantico2expresiones.NodoPrimario;
+import semantico2expresiones.NodoThis;
+
 import java.util.List;
+
 
 import Claves.ClavesServices;
 import semantico.Clase;
@@ -24,6 +40,7 @@ import semantico.TipoPrimitivo;
 import semantico.TipoString;
 import semantico.TipoVoid;
 import semantico.Unidad;
+import semantico.VarLocal;
 import semantico.VariableInstancia;
 import lexico.Alexico;
 import token.Token;
@@ -359,40 +376,50 @@ public class Asintactico {
     
     }
     //Regla 22
-    private void bloque() throws AsintacticoException{
+    private NodoBloque bloque() throws AsintacticoException{
+    	//Creo y seteo el bloque actual
+    	NodoBloque _bloqueactual = new NodoBloque();
+    	tds.setBloqueActual(_bloqueactual);
         if(!this.match(ClavesServices.TokenTypes.PLA.ordinal()))
             throw new AsintacticoException("Error Sintactico :  se esperaba } y se encontro : "+this.actual.getLexema()+this.actual.getError());
-        this.sentenciaAux();
+         this.sentenciaAux();        
         if(!this.match(ClavesServices.TokenTypes.PLC.ordinal()))
             throw new AsintacticoException("Error Sintactico :  se esperaba { y se encontro: "+this.actual.getLexema()+this.actual.getError());
+        return _bloqueactual;
         
     
     }
     //Regla 23 a 28
-    private void sentencia() throws AsintacticoException{
+    private NodoSentencia sentencia() throws AsintacticoException{
+    	NodoSentencia _toR = null;
         if(!this.match(ClavesServices.TokenTypes.PPY.ordinal())){
             if(this.actual.getType()==ClavesServices.TokenTypes.idMetVar.ordinal()){
-                this.asignacionLlamada();
+            	//Inserto el nodo sentencia 
+                _toR = this.asignacionLlamada();
+                this.tds.getBloqueActual().getSentencias().add(_toR);
                 if(!this.match(ClavesServices.TokenTypes.PPY.ordinal()))
                     throw new AsintacticoException("Error Sintactico : se esperaba ; "
                         + "y  se encontro."+this.actual.getLexema()+this.actual.getError());
             }
             //Estoy en siguientes de tipo
             else if(siguientesTipo()){
-                this.tipo();
-                this.listaDecVars();
+            	NodoDecVarLocales aux = new NodoDecVarLocales(this.tds.getBloqueActual());
+                Tipo _toIns = this.tipo();
+                aux.set_tipo(_toIns);
+                this.listaDecVars(aux);
                  if(!this.match(ClavesServices.TokenTypes.PPY.ordinal()))
                     throw new AsintacticoException("Error Sintactico : se esperaba ; "
                         + "y se encontro."+this.actual.getLexema()+this.actual.getError());
+                 _toR = aux;
             }
             //Estoy en siguientes de if
             else if(this.actual.getType()==ClavesServices.TokenTypes.IF.ordinal()){
-                        this.sentenciaIf();
+            	_toR = this.sentenciaIf();
             }
             
             //siguientes llamada
             else if(this.siguientesAcceso()){
-            	this.asignacionLlamada();
+            	_toR = this.asignacionLlamada();
             	
             }
   
@@ -415,15 +442,21 @@ public class Asintactico {
                         +this.actual.getError());
             
         }
+        else 
+        	_toR = new NodoPComa();
+        return  _toR;
+        
     }
     
     //Regla 29
-	  private void asignacionLlamada() throws AsintacticoException{
+	  private NodoSentencia asignacionLlamada() throws AsintacticoException{
+		NodoSentencia _toR = null;
 	  	this.acceso();
 	  	if(this.siguientesTipoAsignacion()) {
 	  		this.tipoAsignacion();
 	  		this.expresion();
 	  	}
+	  	return _toR;
 	  		
 	  }
 	  //Regla 30
@@ -442,24 +475,29 @@ public class Asintactico {
 	  
 	  
 	    //Regla 31
-	    private void listaDecVars() throws AsintacticoException{
+	    private void listaDecVars(NodoDecVarLocales aux) throws AsintacticoException{
+	    	VarLocal _toIns = new VarLocal(aux.get_tipo(),this.actual.getLexema(),this.actual);
+	    	aux.insertVariableLocal(_toIns);
 	        if(!this.match(ClavesServices.TokenTypes.idMetVar.ordinal()))
 	                throw new AsintacticoException("Error Sintactico :"
 	                                + " Se esperaba una idMetVar y se la encontro,"+this.actual.getLexema()+this.actual.getError());
-	        this.listaDecVarsF(); 
+	        this.listaDecVarsF(aux); 
 	    }
 	    //Regla 32
-	    private void listaDecVarsF() throws AsintacticoException{
+	    private void listaDecVarsF(NodoDecVarLocales aux) throws AsintacticoException{
 
 	        if(this.match(ClavesServices.TokenTypes.PC.ordinal()))
-	            this.listaDecVars();
+	            this.listaDecVars(aux);
 	    }
 	    
 	    
 	    //Regla 34
-	    private void expresion() throws AsintacticoException{
-	          this.expresionUnaria();
-	          this.expresionAux();
+	    private NodoExpresion expresion() throws AsintacticoException{
+	    	NodoExpresion _toR = null;
+	        _toR = this.expresionUnaria();
+	        _toR = this.expresionAux(_toR);
+	        return _toR;
+	         
 	    
 	    }
 	    
@@ -472,14 +510,18 @@ public class Asintactico {
 	    }
 	    
 	    //Regla 35
-	    private void expresionAux() throws AsintacticoException{
-	    	
+	    private NodoExpresion expresionAux(NodoExpresion nodo) throws AsintacticoException{
+	    	NodoExpresion _toR = null;
 	    	if(this.siguientesOpBinario()) {
-	    		this.operadorBinario();
-	        	this.expresionUnaria();
-	        	this.expresionAux();
+	    		NodoExpBinaria _aux = new NodoExpBinaria();
+	    		_aux.setOperador(this.operadorBinario());
+	    		_aux.setLizq(nodo);
+	        	_aux.setLder(this.expresionUnaria());
+	        	_toR = this.expresionAux(_aux);
 	    		
 	    	}
+	    	
+	    	return _toR;
 	
 	        
 	       
@@ -487,7 +529,8 @@ public class Asintactico {
 	    
 	    }
 	    //Regla 36
-	    private void operadorBinario() throws AsintacticoException{
+	    private Token operadorBinario() throws AsintacticoException{
+	    	Token _toR = this.actual;
 	    	//Esto puede necesitar un refactor
 	    	if(!this.match(ClavesServices.TokenTypes.IGUAL.ordinal())
 	    			&& !this.match(ClavesServices.TokenTypes.AND.ordinal())
@@ -505,42 +548,53 @@ public class Asintactico {
 	    			&& !this.match(ClavesServices.TokenTypes.MOD.ordinal())
 	    			
 	    			
+	    			
 	    					)
 	    		throw new AsintacticoException("Error Sintactico : esperaba operador binario y se encontro :"+this.actual.getLexema()+this.actual.getError());
+	    	return _toR;
 	    }
 	    
 	    
 	    //Regla 37 y 38
-	    private void expresionUnaria() throws AsintacticoException{
-	    	
+	    private NodoExpUnaria expresionUnaria() throws AsintacticoException{
+	    	NodoExpUnaria toR = new NodoExpUnaria();
 	    	if(this.siguientesOpUn())
-	    		this.opUn();
-	    	this.operando();
+	    		toR.setOperador(this.opUn());
+	    	toR.setExpresion(this.operando());
+	    	return toR;
 	    }
 	    
 	    //Regla 39
 	    
-	    private void opUn() throws AsintacticoException{
+	    private Token opUn() throws AsintacticoException{
+	    Token toR = this.actual;
         if(!this.match(ClavesServices.TokenTypes.MAS.ordinal()))
                 if(!this.match(ClavesServices.TokenTypes.MENOS.ordinal() ))
                   if(!this.match(ClavesServices.TokenTypes.NOT.ordinal()))
-                          throw new AsintacticoException("Error Sintactico : Se esperaba +,-,! , y se encontro : "+this.actual.getLexema()+this.actual.getError()); 
+                          throw new AsintacticoException("Error Sintactico : Se esperaba +,-,! , y se encontro : "+this.actual.getLexema()+this.actual.getError());
+        return toR;
         
     
     }
 	    
 
 	    //Regla 40
-	    private void operando() throws AsintacticoException{
+	    private NodoExpresion operando() throws AsintacticoException{
+	       NodoExpresion toR = null;
 	       if(this.siguientesLiteral())
-	    	   this.literal();
+	    	   toR = this.literal();
 	       else
-	    	   this.acceso();
+	    	   toR = this.acceso();
+	       return toR;
 	       
 	    }
 	    
 	    //Regla 41
-	    private void literal() throws AsintacticoException{
+	    private NodoLiteral literal() throws AsintacticoException{
+	    	
+	    	//Devuelvo el literal con la expresion 
+	    	NodoLiteral toR = new NodoLiteral();
+	    	toR.setOperando(this.actual);
 	    	
 	         if(!this.match(ClavesServices.TokenTypes.TRUE.ordinal())){
 	            if(!this.match(ClavesServices.TokenTypes.FALSE.ordinal())){
@@ -554,6 +608,7 @@ public class Asintactico {
 	                }
 	            }
 	        }
+	         return toR;
 	    }
 	    
 
@@ -566,24 +621,28 @@ public class Asintactico {
 	       
 	  
 	  //Regla 42
-	  private void acceso() throws AsintacticoException{
-		  this.primario();
-		  this.encadenado();
+	  private NodoPrimario acceso() throws AsintacticoException{
+		  NodoPrimario _toR = this.primario();
+		  _toR.setCadena(this.encadenado());
+		  return _toR;
 	  }
 	  
 	    
 	    //Regla 43 a 46
 
-	    private void primario() throws AsintacticoException{
+	    private NodoPrimario primario() throws AsintacticoException{
+	    	NodoPrimario _toR = null;
 	        if(this.match(ClavesServices.TokenTypes.PPA.ordinal())){
-	            this.expresion();
+	        	NodoExpParentizada aux = new NodoExpParentizada();
+	            aux.setExpresion(this.expresion());
+	            _toR = aux;
 	            if(!this.match(ClavesServices.TokenTypes.PPC.ordinal()))
 	            throw new AsintacticoException("Error Sintactico, se esperaba),y se encontro :"+this.actual.getLexema()	+this.actual.getError());
 	                
 	        }
 	           
 	        else if(this.actual.getType()==ClavesServices.TokenTypes.THIS.ordinal())
-	            this.accesoThis();
+	            _toR = this.accesoThis();
 	        else if(this.actual.getType()==ClavesServices.TokenTypes.idMetVar.ordinal())
 	            this.accesoVarMetodo();
 	        else if(this.actual.getType()==ClavesServices.TokenTypes.idClase.ordinal())
@@ -593,6 +652,8 @@ public class Asintactico {
 	        else if(this.actual.getType()==ClavesServices.TokenTypes.STATIC.ordinal())
 	        	this.accesoStatic();
 	        else throw new AsintacticoException("Error Sintactico : se esparaba this, idMetVar,idClase, new o static y se encontro : "+this.actual.getLexema()+this.actual.getError());
+	        
+	        return _toR;
 	        
 	    
 	    }
@@ -629,9 +690,11 @@ public class Asintactico {
 	    }
 	    
 	     //Regla 49
-	    private void accesoThis() throws AsintacticoException{
+	    private NodoThis accesoThis() throws AsintacticoException{
+	    	NodoThis _toR = new NodoThis(this.actual,this.tds.getUnidadActual(),this.tds.getClaseActual());
 	         if(!this.match(ClavesServices.TokenTypes.THIS.ordinal()))
 	            throw new AsintacticoException("Error Sintactico: se esperaba un THIS y  se encontro,"+this.actual.getLexema()+this.actual.getError());
+	         return _toR;
 	        //this.encadenadoAux();
 	    }
 	    
@@ -669,30 +732,35 @@ public class Asintactico {
     private void sentenciaAux() throws AsintacticoException{
         
         if(this.actual.getType()!=ClavesServices.TokenTypes.PLC.ordinal() ){
-            this.sentencia();
+            NodoSentencia _toIns = this.sentencia();
+            this.tds.getBloqueActual().addSentencia(_toIns);
             this.sentenciaAux();
         }
     }
     //Regla 27 28 31 33 34
    
     //Regla 29
-    private void sentenciaIf() throws AsintacticoException{
+    private NodoIf sentenciaIf() throws AsintacticoException{
+    	NodoIf _toR = new NodoIf();
         if(this.match(ClavesServices.TokenTypes.IF.ordinal())){
             if(!this.match(ClavesServices.TokenTypes.PPA.ordinal()))
                 throw new AsintacticoException("Error Sintactico,se esperaba ( y  se encontro."+this.actual.getLexema()+this.actual.getError());
-             this.expresion();
+             _toR.setCondicion(this.expresion());
              if(!this.match(ClavesServices.TokenTypes.PPC.ordinal()))
                  throw new AsintacticoException("Error Sintactico,se esperaba ) y  se encontro "+this.actual.getLexema()+this.actual.getError());
-             this.sentencia();
-             this.sentenciaElse();
+             _toR.setThen(this.sentencia());
+             _toR.setNodoElse(this.sentenciaElse());
         }
         else throw new AsintacticoException("Error Sintactico,se esperaba if y  se encontro :"+this.actual.getLexema()+this.actual.getError());
+        return _toR;
     
     }
     //regla 30
-    private void sentenciaElse() throws AsintacticoException{
+    private NodoSentencia sentenciaElse() throws AsintacticoException{
+    	NodoSentencia _toR = null;
         if(this.match(ClavesServices.TokenTypes.ELSE.ordinal()))
-            this.sentencia();
+            _toR = this.sentencia();
+        return _toR;
 
     
     }
@@ -738,12 +806,14 @@ public class Asintactico {
     
    
     //Regla 71
-    private void encadenado() throws AsintacticoException{
+    private Encadenado encadenado() throws AsintacticoException{
+       Encadenado _toR = null;
        if(this.actual.getType()==ClavesServices.TokenTypes.PP.ordinal()){
     	   this.varOMetodoEncadenado();
     	   this.encadenado();
     	   
-       }    	   
+       }
+       return _toR;
     
     }
     
