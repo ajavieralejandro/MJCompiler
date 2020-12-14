@@ -89,7 +89,7 @@ public class NodoVar extends NodoPrimario {
        }
        
        else{
-           //Si no es una variable de instancia la busco entre las variables locales
+       
            if(this.actual.getVariablesLocales().containsKey(this.id.getLexema())){
                VarLocal aux = actual.getVariablesLocales().get(this.id.getLexema());
                toR = aux.getTipo();

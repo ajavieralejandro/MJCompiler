@@ -29,6 +29,7 @@ public class NodoReturn extends NodoSentencia {
 
     @Override
     public void check() throws ASTException {
+    	System.out.println("Estoy chequeando un nodo return");
         //Si la expresion es null entonces el tipo de retorno debera ser  void?? chequear esto!!!
         //Chequear la representación del tipo void en la tabla de símbolos
         if(this.expresion==null
@@ -41,7 +42,7 @@ public class NodoReturn extends NodoSentencia {
         
         
         TipoBase aux = this.expresion.check();
-        System.out.println("El valor de aux es : "+aux);
+        System.out.println("El valor de aux es : "+aux.getTipo());
             
         if(!aux.esTipoValido())
             throw new ASTException("Error Semantico : La expresión de retorno no es de tipo valido, en"

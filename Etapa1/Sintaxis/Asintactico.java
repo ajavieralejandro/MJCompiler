@@ -387,6 +387,7 @@ public class Asintactico {
     private NodoBloque bloque() throws AsintacticoException{
     	//Creo y seteo el bloque actual
     	NodoBloque _bloqueactual = new NodoBloque();
+    	_bloqueactual.setUnidadActual(tds.getUnidadActual());
     	tds.setBloqueActual(_bloqueactual);
         if(!this.match(ClavesServices.TokenTypes.PLA.ordinal()))
             throw new AsintacticoException("Error Sintactico :  se esperaba } y se encontro : "+this.actual.getLexema()+this.actual.getError());
@@ -416,6 +417,7 @@ public class Asintactico {
             else if(siguientesTipo()){
             	System.out.println("Estoy en ListaDecVars");
             	NodoDecVarLocales aux = new NodoDecVarLocales(this.tds.getBloqueActual());
+            	
                 Tipo _toIns = this.tipo();
                 aux.set_tipo(_toIns);
                 this.listaDecVars(aux);
@@ -502,6 +504,7 @@ public class Asintactico {
 	    private void listaDecVars(NodoDecVarLocales aux) throws AsintacticoException{
 	    	VarLocal _toIns = new VarLocal(aux.get_tipo(),this.actual.getLexema(),this.actual);
 	    	aux.insertVariableLocal(_toIns);
+	    	tds.getBloqueActual().insertarVariableLocal(_toIns);
 	        if(!this.match(ClavesServices.TokenTypes.idMetVar.ordinal()))
 	                throw new AsintacticoException("Error Sintactico :"
 	                                + " Se esperaba una idMetVar y se la encontro,"+this.actual.getLexema()+this.actual.getError());

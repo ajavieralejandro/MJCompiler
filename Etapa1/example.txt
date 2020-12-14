@@ -1,18 +1,40 @@
 class A {
 	private int a1,a2;
 	static void main(){}
+	
+		dynamic boolean z(int i){
+		return false;
+	}
 }
 
 class B extends A{
 	private boolean a3;
 	dynamic int i1(int i){
-		return null;
+		return 2;
 	}
 }
 
 class C extends B{
+
+	private A y;
 	dynamic boolean b2(B b){
 		return b.i1(2)==2;
 	}
+	
+	dynamic C x(int i){
+		return this;
+	}
+	
+	dynamic boolean test1(int i){
+	A aux;
+	aux = x(2).y;
+	boolean aux2;
+	aux2 = aux.z(2);
+	return aux2;
+		}
+	
+	
+	
+
 }
 

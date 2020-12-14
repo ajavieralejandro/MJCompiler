@@ -51,6 +51,7 @@ public class NodoDecVarLocales extends NodoSentencia {
        
 
        for(VarLocal v : this.variablesLocales){
+    	   System.out.println("La variable local v es :"+v.getNombre());
            if(this.bloque.getUnidadActual().getParamMap().containsKey(v.getNombre()))
            throw new ASTException("Error semantico : la variable con nombre : "+v.getNombre()+" esta repetida en el parametro "+
                    v.getToken().getError());
