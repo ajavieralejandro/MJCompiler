@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import Claves.ClavesServices;
+import semantico2.ASTException;
 import token.Token;
 
 /**
@@ -61,9 +62,9 @@ public class Clase {
      
      public void controlDeclaraciones() throws ASemanticoException {
     	 for(Ctor c : this.constructores)
-    		 c.ControlDeclaraciones();
+    		 c.controlDeclaraciones();
     	 for (Unidad u : this.metodos.values())
-    		 u.ControlDeclaraciones();
+    		 u.controlDeclaraciones();
      }
      
      public Ctor getConstructor(int params){
@@ -214,6 +215,22 @@ public class Clase {
         
     }
     
+    public void chequearDeclaraciones() throws ASemanticoException{
+    	  this.ts.setClaseActual(this);
+          for(Metodo m : this.metodos.values()){
+              this.ts.setUnidadActual(m);
+              //chequeo los bloques de los metodos
+              m.controlDeclaraciones();
+                    
+          }
+          
+          for(Ctor c : this.constructores){
+              this.ts.setUnidadActual(c);
+              c.controlDeclaraciones();
+          }
+    	
+    }
+    
     public void consolidar() throws ASemanticoException{
         //Si no tengo constructor agrego uno por defecto
         
@@ -304,7 +321,7 @@ public class Clase {
     }
     
     public TipoClase getTipo(){
-        return new TipoClase(this.token,this.ts);
+        return new TipoClase(this.token);
     
     }
     
@@ -316,6 +333,15 @@ public class Clase {
         return this.variablesInstancia;
       
    }
+    
+    public void controlSentencias() throws ASTException{
+    	for(Ctor c : this.constructores)
+    		c.controlSentencias();
+    	for(Metodo m : this.metodos.values())
+    		m.controlSentencias();
+    	
+    	
+    }
     
    
 

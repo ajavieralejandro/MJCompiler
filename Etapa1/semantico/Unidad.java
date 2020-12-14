@@ -7,7 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
+import semantico2.ASTException;
+import semantico2.NodoBloque;
+import semantico2.NodoSentencia;
 import token.Token;
 
 /**
@@ -20,6 +22,7 @@ public abstract class Unidad {
     private Token id;
     private final Map<String,Parametro> parametros;
     private Clase clase;
+    private NodoBloque bloque;
 
 
     public Unidad(){
@@ -117,8 +120,24 @@ public abstract class Unidad {
     }
     
     
-    public abstract void ControlDeclaraciones() throws ASemanticoException;
+    public abstract void controlDeclaraciones() throws ASemanticoException;
+    public void controlSentencias() throws ASTException{
+    	if(this.bloque!=null)
+	    	for(NodoSentencia n : this.bloque.getSentencias()) {
+	    		System.out.println("El valor de n es : "+n);
+	    		if(n!=null)
+	    			n.check();
+	    	}
+    }
     public abstract String getFormaMetodo();
+
+	public NodoBloque getBloque() {
+		return bloque;
+	}
+
+	public void setBloque(NodoBloque bloque) {
+		this.bloque = bloque;
+	}
 
         
 }

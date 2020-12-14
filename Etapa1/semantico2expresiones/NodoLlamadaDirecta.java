@@ -23,6 +23,9 @@ public class NodoLlamadaDirecta extends NodoPrimario {
         this.actualArgs = array;
     }
     
+    public ArrayList<NodoExpresion> getActualArgs(){
+    	return this.actualArgs;
+    }
     
     
 

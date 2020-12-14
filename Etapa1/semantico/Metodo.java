@@ -60,7 +60,7 @@ public class Metodo extends Unidad {
     }
     
     @Override
-    public void ControlDeclaraciones() throws ASemanticoException {
+    public void controlDeclaraciones() throws ASemanticoException {
     	if(!this.retorno.esTipoValido())
     		throw new ASemanticoException("Error Semantico : Tipo de retorno no valido, se encontro : "+this.retorno.getTipo()+"."+this.retorno.getToken().getError());
     	

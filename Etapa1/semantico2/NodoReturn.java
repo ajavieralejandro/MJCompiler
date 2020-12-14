@@ -29,7 +29,7 @@ public class NodoReturn extends NodoSentencia {
 
     @Override
     public void check() throws ASTException {
-        //Si la expresion es null entonces el tipo de retorno debera ser null
+        //Si la expresion es null entonces el tipo de retorno debera ser  void?? chequear esto!!!
         //Chequear la representación del tipo void en la tabla de símbolos
         if(this.expresion==null
             && !this.metodo.getRetorno().getTipo().equals(ClavesServices.TokenTypes.VOID.toString()))
@@ -37,16 +37,18 @@ public class NodoReturn extends NodoSentencia {
                                     +" el metodo :  "+this.metodo.getNombre()+
                                     "  espara un tipo de retorno : "
                                     +this.metodo.getRetorno().getTipo()+
-                                     this.expresion.getToken().getError());
+                                     this.metodo.getToken().getError());
+        
         
         TipoBase aux = this.expresion.check();
+        System.out.println("El valor de aux es : "+aux);
             
         if(!aux.esTipoValido())
             throw new ASTException("Error Semantico : La expresión de retorno no es de tipo valido, en"
-                    + "linea :"+this.expresion.getToken().getLine()+this.expresion.getToken().getError());
+                    +aux.getToken().getError());
         if(!this.metodo.getRetorno().esCompatible(aux))
             throw new ASTException("ERROR SEMANTICO : La expresión de retorno no es compatible con el tipo de retorno:"+this.metodo.getRetorno().getTipo()
-            		+this.getExpresion().getToken().getError());
+            		+aux.getToken().getError());
         
     }
     

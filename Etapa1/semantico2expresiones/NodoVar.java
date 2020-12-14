@@ -20,6 +20,14 @@ public class NodoVar extends NodoPrimario {
    private final NodoBloque actual;
    private Token id;
    
+   
+   public NodoVar(NodoBloque _actual,Token _id, boolean izq) {
+	   this.esLadoIzq = izq;
+	   this.ts = TDS.getInstance();
+	   this.actual = _actual;
+	   this.id = _id;
+
+   }
  
 
    public boolean isEsLadoIzq() {

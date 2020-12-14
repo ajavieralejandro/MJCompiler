@@ -12,12 +12,12 @@ public class TipoClase extends TipoReferencia {
     private Token tipo;
     private final TDS ts;
     
-    public TipoClase(Token tipo, TDS ts){
+    public TipoClase(Token tipo){
     	//Fixing bug in Object
     	if(tipo.getLexema().equals("Object"))
     		tipo.setLexema(ClavesServices.TokenTypes.OBJECT.toString());
         this.tipo = tipo;
-        this.ts = ts;
+        this.ts = TDS.getInstance();
     }
 
     @Override
@@ -32,7 +32,14 @@ public class TipoClase extends TipoReferencia {
     
      @Override
     public boolean esTipoValido() {
-        return ts.getClases().containsKey(this.getTipo());
+    	 boolean _toR = false;
+    	 System.out.println("Estoy en el tipo valido de clase con : "+this.getTipo());
+    	if(this.getTipo().equals("null") || this.getTipo().equals(ClavesServices.TokenTypes.NULL.toString()))
+    		_toR = true;
+    	else
+    		_toR = ts.getClases().containsKey(this.getTipo());
+    		
+        return _toR;
     }
      
      public boolean esTipoClase(){

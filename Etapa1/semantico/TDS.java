@@ -1,5 +1,6 @@
 package semantico;
 import Claves.ClavesServices;
+import semantico2.ASTException;
 import semantico2.NodoBloque;
 
 import java.util.Hashtable;
@@ -304,7 +305,7 @@ public class TDS {
     	return this.clases.containsKey(clase);
     }
     
-    public void chequeo() throws ASemanticoException{
+    public void chequeo() throws ASemanticoException,ASTException{
         //chequeo que no tenga mains
         this.chequearMain();
         for(Clase c : this.clases.values())
@@ -319,6 +320,7 @@ public class TDS {
                 c.consolidar();
             c.chequearTipos();
             c.controlDeclaraciones();
+            c.controlSentencias();
         }
     }
     

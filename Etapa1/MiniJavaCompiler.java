@@ -1,5 +1,6 @@
 import lexico.Alexico;
 import semantico.ASemanticoException;
+import semantico2.ASTException;
 import Sintaxis.*;
 import buffer.Buffer;
 import Claves.ClavesServices;
@@ -62,6 +63,9 @@ public class MiniJavaCompiler {
                 System.out.println(e.getMessage());
             }
             catch(ASemanticoException e){
+                System.out.println(e.getMessage());
+            }
+            catch(ASTException e){
                 System.out.println(e.getMessage());
             }
         

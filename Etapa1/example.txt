@@ -6,7 +6,7 @@ class A {
 class B extends A{
 	private boolean a3;
 	dynamic int i1(int i){
-		return 2;
+		return null;
 	}
 }
 
