@@ -26,11 +26,7 @@ class C extends B{
 	}
 	
 	dynamic boolean test1(int i){
-	A aux;
-	aux = x(2).y;
-	boolean aux2;
-	aux2 = aux.z(2);
-	return aux2;
+	return x(2).y.z(2);
 		}
 	
 	

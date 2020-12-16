@@ -43,12 +43,11 @@ public class NodoReturn extends NodoSentencia {
         
         TipoBase aux = this.expresion.check();
         System.out.println("El valor de aux es : "+aux.getTipo());
-            
         if(!aux.esTipoValido())
             throw new ASTException("Error Semantico : La expresión de retorno no es de tipo valido, en"
                     +aux.getToken().getError());
         if(!this.metodo.getRetorno().esCompatible(aux))
-            throw new ASTException("ERROR SEMANTICO : La expresión de retorno no es compatible con el tipo de retorno:"+this.metodo.getRetorno().getTipo()
+            throw new ASTException("ERROR SEMANTICO : La expresión de retorno :"+aux.getTipo()+" no es compatible con el tipo de retorno:"+this.metodo.getRetorno().getTipo()
             		+aux.getToken().getError());
         
     }

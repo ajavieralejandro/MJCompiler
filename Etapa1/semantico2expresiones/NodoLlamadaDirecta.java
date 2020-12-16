@@ -37,6 +37,8 @@ public class NodoLlamadaDirecta extends NodoPrimario {
 
     @Override
     public TipoBase check() throws ASTException {
+    	TipoBase _toR = null;
+    	System.out.println("Hola estoy chequeando las llamadas directas de :"+this.id.getLexema());
   
         Metodo actual = this.ts.getClaseActual().getMetodos().get(this.id.getLexema());
         if(actual==null)
@@ -57,8 +59,14 @@ public class NodoLlamadaDirecta extends NodoPrimario {
             if(!actual.igualTipoParametros(list))
              throw new ASTException("Error Semantico : Los tipos con los que se invoca al constructor,"
                      + "no son los esperados por el constructor."+this.id.getError());
-        
-            return actual.getRetorno();
+            
+            
+            if(this.getCadena()!=null)
+            	_toR = this.getCadena().check(actual.getRetorno());
+            else
+            	_toR = actual.getRetorno();
+           
+            return _toR;
          
          
         

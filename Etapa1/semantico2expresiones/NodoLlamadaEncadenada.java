@@ -30,6 +30,7 @@ public class NodoLlamadaEncadenada extends Encadenado {
 
    @Override
    public TipoBase check(TipoBase receptor) throws ASTException {
+	   System.out.println("NodoLlamadaEncadenada");
        //tengo que chequear el tipo de los argumentos actuales
        //tengo que chequear que la llamada pertenezca a la clase del tipo receptor
        //tengo que llamar al encadenado con el tipo de la llamada si tengo encadenado...

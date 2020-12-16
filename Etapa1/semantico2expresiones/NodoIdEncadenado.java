@@ -28,6 +28,8 @@ public class NodoIdEncadenado extends Encadenado {
 
    @Override
    public TipoBase check(TipoBase receptor) throws ASTException{
+	   System.out.println("NodoIdEncadenado");
+	   System.out.println("El lexema de la variable es : "+id.getLexema());
        
        Map<String,Clase> map = ts.getClases();
        TipoBase toR = null;
@@ -45,6 +47,9 @@ public class NodoIdEncadenado extends Encadenado {
            //ahora que se que existe el id tengo que chequear la visibilidad 
            VariableInstancia var =  aux.getVariablesInstancia().get(this.id.getLexema());
            toR = var.getTipo();
+           System.out.println("El tipo de la variable es : "+toR.getTipo());
+           System.out.println("La variable fue declarada en : "+var.getDeclarada().getName());
+           System.out.println("La clase actual es : "+this.ts.getClaseActual().getName());
            if((var.getVisibilidad().equals(ClavesServices.TokenTypes.PRIVATE.toString()) || var.getVisibilidad().equals("private"))
                    && !this.ts.getClaseActual().getName().equals(var.getDeclarada().getName()))
                throw new ASTException("Error Semantico : el id  "+this.id.getLexema()+"es una variable privada"

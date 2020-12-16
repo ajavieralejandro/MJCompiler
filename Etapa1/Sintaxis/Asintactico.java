@@ -22,8 +22,10 @@ import semantico2expresiones.NodoExpBinaria;
 import semantico2expresiones.NodoExpParentizada;
 import semantico2expresiones.NodoExpUnaria;
 import semantico2expresiones.NodoExpresion;
+import semantico2expresiones.NodoIdEncadenado;
 import semantico2expresiones.NodoLiteral;
 import semantico2expresiones.NodoLlamadaDirecta;
+import semantico2expresiones.NodoLlamadaEncadenada;
 import semantico2expresiones.NodoLlamadaEstatica;
 import semantico2expresiones.NodoPrimario;
 import semantico2expresiones.NodoThis;
@@ -195,6 +197,7 @@ public class Asintactico {
         	  //Tengo que encontrar el tipo y no tratarlo como String...
              VariableInstancia aux = new VariableInstancia(tipo,t.getLexema(),t);
              aux.setVisibilidad(visibilidad.getLexema());
+             aux.setDeclarada(tds.getClaseActual());
              //Tengo que ver si necesito imprimir las variables de instancias
              //aux.imprimir();
              this.tds.getClaseActual().insertarVariableInstancia(aux);
@@ -873,21 +876,28 @@ public class Asintactico {
     private Encadenado encadenado() throws AsintacticoException{
        Encadenado _toR = null;
        if(this.actual.getType()==ClavesServices.TokenTypes.PP.ordinal()){
-    	   this.varOMetodoEncadenado();
-    	   this.encadenado();
+    	   _toR = this.varOMetodoEncadenado();
+    	   _toR.setCadena(this.encadenado());
     	   
        }
        return _toR;
     
     }
     
-    private void varOMetodoEncadenado() throws AsintacticoException{
+    private Encadenado varOMetodoEncadenado() throws AsintacticoException{
+    	Encadenado _toR = null;
         if(!this.match(ClavesServices.TokenTypes.PP.ordinal()))
-            throw new AsintacticoException("Error Sintactico : se esperaba new y se encontro :"+this.actual.getLexema()+this.actual.getError());
+            throw new AsintacticoException("Error Sintactico : se esperaba '.' y se encontro :"+this.actual.getLexema()+this.actual.getError());
+        Token _aux = this.actual;
+    	_toR = new NodoIdEncadenado(_aux);
         if(!this.match(ClavesServices.TokenTypes.idMetVar.ordinal()))
-            throw new AsintacticoException("Error Sintactico : se esperaba idClase y se encontro :"+this.actual.getLexema()+this.actual.getError());
-        if(this.actual.getType()==ClavesServices.TokenTypes.PPA.ordinal())
-        	this.argsActuales();
+            throw new AsintacticoException("Error Sintactico : se esperaba idMetVar y se encontro :"+this.actual.getLexema()+this.actual.getError());
+        if(this.actual.getType()==ClavesServices.TokenTypes.PPA.ordinal()) {
+        	ArrayList<NodoExpresion> _args = this.argsActuales();
+        	_toR = new NodoLlamadaEncadenada(_aux,_args);
+        	
+        }
+        return _toR;
     	
     }
     //Regla 72
