@@ -35,9 +35,11 @@ public class TipoInt extends TipoPrimitivo {
 
 	@Override
 	public boolean esCompatible(TipoBase e) {
+            System.out.println("Estoy viendo si soy compatible, tengo : "+this.getTipo());
 		boolean toR = false;
 		if(e.getTipo().equals(ClavesServices.TokenTypes.INT.toString()))
 			toR = true;
+                System.out.println("Estoy retornando : "+toR);
 		return toR;
 	}
     

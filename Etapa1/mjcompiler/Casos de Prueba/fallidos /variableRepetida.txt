@@ -1,0 +1,17 @@
+class A extends B {
+
+A(){
+
+}
+
+static void main(){
+}
+
+}
+
+class B {
+	private A a1;
+	private B a1;
+
+}
+

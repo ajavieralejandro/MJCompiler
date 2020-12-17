@@ -14,7 +14,6 @@ import semantico2.NodoIf;
 import semantico2.NodoPComa;
 import semantico2.NodoReturn;
 import semantico2.NodoSentencia;
-import semantico2.NodoSentenciaAsignacion;
 import semantico2.NodoWhile;
 import semantico2expresiones.Encadenado;
 import semantico2expresiones.NodoCtor;
@@ -30,6 +29,7 @@ import semantico2expresiones.NodoLlamadaEstatica;
 import semantico2expresiones.NodoPrimario;
 import semantico2expresiones.NodoThis;
 import semantico2expresiones.NodoVar;
+import semantico2.NodoSentenciaAsignacion;
 
 import java.util.List;
 
@@ -56,6 +56,7 @@ import lexico.Alexico;
 import token.Token;
 import token.TokenException;
 import semantico.ASemanticoException;
+import semantico2.NodoSentSimple;
 
 /**
  *
@@ -480,22 +481,33 @@ public class Asintactico {
     //Regla 29
 	  private NodoSentencia asignacionLlamada() throws AsintacticoException{
 		NodoSentencia _toR = null;
-	  	this.acceso();
+		//Esto lo tengo que ver
+	  	NodoSentSimple _aux1 = new NodoSentSimple();
+                _aux1.setExpresion(this.acceso());
+                _toR = _aux1;
 	  	if(this.siguientesTipoAsignacion()) {
-	  		this.tipoAsignacion();
-	  		this.expresion();
+	  		NodoSentenciaAsignacion _aux2 = new NodoSentenciaAsignacion(this.tds.getBloqueActual());
+                        _aux2.setlIzq(_aux1.getExpresion());
+	  		//ahora las asignaciones tienen un tipo
+	  		_aux2.setOperador(this.tipoAsignacion());
+	  		_aux2.setLder(this.expresion());
+                        _toR = _aux2;
 	  	}
 	  	return _toR;
 	  		
 	  }
 	  //Regla 30
 	  
-	  private void tipoAsignacion() throws AsintacticoException{
+	  private Token tipoAsignacion() throws AsintacticoException{
+              
+              Token _toR = this.actual;
 		
 		  if(!this.match(ClavesServices.TokenTypes.IGUALMAS.ordinal()) 
 				  && !this.match(ClavesServices.TokenTypes.IGUAL.ordinal())
 				  && !this.match(ClavesServices.TokenTypes.IGUALMENOS.ordinal()))
 			  throw new AsintacticoException("Error Sintactico :"+this.actual.getLine()+" se esperaba un operador tipo asignacion y se encontro : "+this.actual.getLexema()+this.actual.getError());
+                  
+                  return _toR;
 	  }
 	  
 	  private void llamada() throws AsintacticoException{
@@ -598,19 +610,28 @@ public class Asintactico {
 	    
 	    
 	    //Regla 37 y 38
-	    private NodoExpUnaria expresionUnaria() throws AsintacticoException{
-	    	System.out.println("Estoy en expUnaria");
-	    	NodoExpUnaria toR = new NodoExpUnaria();
+	    private NodoExpresion expresionUnaria() throws AsintacticoException{
+	    	NodoExpresion _toR = null;
+                boolean _flag = false;
+	    	NodoExpUnaria aux = new NodoExpUnaria();
 	    	System.out.println("eL TOKEN actual es :"+this.actual.getLexema());
 	    	if(this.siguientesOpUn()) {
+                    _flag = true;
+                        //Tengo un operador entonces no soy un literal
 	    		System.out.println("Estoy en los siguientes de operador unario con :"+this.actual.getLexema());
-	    		toR.setOperador(this.opUn());
+	    		aux.setOperador(this.opUn());
+                        _toR = aux;
 
 	    		
 	    	}
-	    	toR.setExpresion(this.operando());
-	    	System.out.println("Retorno :"+toR);
-	    	return toR;
+	    	aux.setExpresion(this.operando());
+                if(!_flag){
+                    //Si no tengo operador entonces estoy aca y listo
+                    _toR = aux.getExpresion();
+                }
+                    
+	    	System.out.println("Retorno :"+_toR);
+	    	return _toR;
 	    }
 	    
 	    //Regla 39

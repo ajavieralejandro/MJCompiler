@@ -26,6 +26,10 @@ class C extends B{
 	}
 	
 	dynamic boolean test1(int i){
+	boolean aux;
+	aux = true;
+        int aux2;
+        aux2 = this.i1(2) + 2;
 	return x(2).y.z(2);
 		}
 	
@@ -33,4 +37,5 @@ class C extends B{
 	
 
 }
+
 

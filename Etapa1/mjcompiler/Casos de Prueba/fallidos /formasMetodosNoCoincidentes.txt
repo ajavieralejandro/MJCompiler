@@ -1,0 +1,19 @@
+class A extends Object{
+	static void main(){
+	}
+	
+	static A mA(int i){
+		return this;
+	}
+}
+
+class B extends A{
+}
+
+class C extends B{
+
+	dynamic A mA(int i){
+		return null;
+	}
+
+}

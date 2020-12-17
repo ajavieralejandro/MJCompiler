@@ -1,0 +1,31 @@
+class A extends B {
+
+private A a2;
+
+A(B aux){
+
+}
+
+static void main(){
+}
+
+
+
+}
+
+
+class B {
+	private A a1;
+	
+	static int a1(boolean a){
+	}
+
+}
+
+class C extends A{
+
+static int a1(){
+
+}
+}
+

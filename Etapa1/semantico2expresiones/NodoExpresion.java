@@ -12,6 +12,9 @@ public abstract class NodoExpresion {
 
     public abstract Token getToken();
     public abstract TipoBase check() throws ASTException;
+    public boolean chain(){
+        return false;
+    }
     
     
 }

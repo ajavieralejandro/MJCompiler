@@ -1,16 +1,15 @@
-import lexico.Alexico;
 import semantico.ASemanticoException;
 import semantico2.ASTException;
 import Sintaxis.*;
 import buffer.Buffer;
 import Claves.ClavesServices;
-import token.TokenException;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import token.Token;
+import token.TokenException;
 
 /**
  *

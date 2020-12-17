@@ -44,6 +44,7 @@ public class NodoLlamadaDirecta extends NodoPrimario {
         if(actual==null)
             throw new ASTException("Error semantico : El metodo que se esta invocando no se encuentra en la clase actual.  "
                                     +this.id.getError());
+    	System.out.println("el metodo es visible en la clase actual :"+actual.getNombre());
         //chequeo los arguementos
          ArrayList<TipoBase> list = new ArrayList<TipoBase>();
          for(NodoExpresion e : this.actualArgs){

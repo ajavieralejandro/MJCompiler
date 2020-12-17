@@ -76,6 +76,11 @@ public class NodoIdEncadenado extends Encadenado {
        
        
    }
+   
+   @Override
+   public boolean isId(){
+       return true;
+   }
 
    @Override
    public Token getId() {

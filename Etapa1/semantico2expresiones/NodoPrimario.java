@@ -11,6 +11,8 @@ import token.Token;
 public abstract class NodoPrimario extends NodoOperando {
    
    private Encadenado cadena;
+   
+  
 
    public Encadenado getCadena() {
        return cadena;
@@ -18,6 +20,11 @@ public abstract class NodoPrimario extends NodoOperando {
 
    public void setCadena(Encadenado cadena) {
        this.cadena = cadena;
+   }
+   
+   @Override
+   public boolean chain(){
+       return this.cadena!=null;
    }
    
   

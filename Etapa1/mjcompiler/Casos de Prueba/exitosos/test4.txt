@@ -1,0 +1,18 @@
+class A {
+	private int a1,a2;
+	static void main(){}
+}
+
+class B extends A{
+	private boolean a3;
+	dynamic int i1(int i){
+		return 2;
+	}
+}
+
+class C extends B{
+	dynamic boolean b2(B b){
+		return b.i1(2)==2;
+	}
+}
+

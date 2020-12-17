@@ -34,6 +34,14 @@ public abstract class Encadenado {
        this.ladoIzq = ladoIzq;
    }
    
+   public boolean isId(){
+       boolean _toR = false;
+       //Si tengo cadena entonces retorno la cadena
+       if(this.cadena!=null)
+           _toR =  this.cadena.isId();
+       return _toR;
+   }
+   
    
    public abstract TipoBase check(TipoBase receptor) throws ASTException;
    

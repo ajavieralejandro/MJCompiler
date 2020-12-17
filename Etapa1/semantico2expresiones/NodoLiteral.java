@@ -24,6 +24,7 @@ public class NodoLiteral extends NodoOperando {
 
 
    public Token getToken() {
+       System.out.println("Estoy devolviendo un token de un NodoLiteral");
        return this.operando;
    }
 

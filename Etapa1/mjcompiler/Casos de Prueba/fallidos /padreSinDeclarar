@@ -1,0 +1,12 @@
+class A extends B {
+
+A(){
+
+}
+
+static void main(){
+}
+
+}
+
+

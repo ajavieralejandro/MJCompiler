@@ -1,6 +1,7 @@
 package semantico2expresiones;
 
 import Claves.ClavesServices;
+import semantico.Tipo;
 import semantico.TipoBase;
 import semantico.TipoBoolean;
 import semantico.TipoInt;
@@ -44,12 +45,22 @@ public class NodoExpBinaria extends NodoExpresion {
    
    @Override
    public TipoBase check() throws ASTException {
+       System.out.println("Estoy por hacer el check de nodoExpresionBinaria");
+       
+       System.out.println("El operador es  : "+this.operador.getLexema());
+    
+
+    
+
+       
        int aux = this.operador.getType();
        if(aux==ClavesServices.TokenTypes.MAS.ordinal()
           || aux==ClavesServices.TokenTypes.MENOS.ordinal()
           || aux== ClavesServices.TokenTypes.POR.ordinal()
           || aux == ClavesServices.TokenTypes.DIV.ordinal()
           || aux == ClavesServices.TokenTypes.MOD.ordinal()){
+           
+           System.out.println("Tengo que estar en este caso con MAS");
           
            //chequeo que ambos lados sean de tipo int...
            this.checkInt();
@@ -106,17 +117,41 @@ public class NodoExpBinaria extends NodoExpresion {
    }
    
    private void checkInt() throws ASTException{
+       
+       System.out.println("Me estoy fijando que todo sea compatible con int");
+       //System.out.println("El tipo del lado derecho es : "+this.Lder.check().getTipo());
+       //System.out.println("El tipo del lado izquierdo es : "+this.Lizq.check().getTipo());
+       
+       TipoBase _tipoder = this.Lder.check();
+       TipoBase _tipoizq = this.Lizq.check();
+       
+       System.out.println("El lado izquierdo es de tipo : "+_tipoizq.getTipo());
+      
+       System.out.println("El operador es  : "+this.operador.getLexema());
+       if(this.Lder instanceof NodoLiteral)
+           System.out.println("El lado derecho es instancia de nodoLiteral");
+       if(this.Lder instanceof NodoExpUnaria){
+           System.out.println("El lado derecho es instancia de ExpresionUnaria");
+           NodoExpUnaria _test = (NodoExpUnaria) this.Lder;
+           System.out.println("El token de la expresion Unaria es :"+_test.getToken());
+           System.out.println("El operador es  :"+_test.getOperador());
+           System.out.print("El tipo de la  expresion es :"+_test.getExpresion().check().getTipo());
+       
+       }
+    
             
            //Tal vez se podria optimizar esto... 
-           if(!this.Lder.check().esCompatible(new TipoInt()))
+           if(!_tipoder.esCompatible(new TipoInt())){
                    throw new ASTException("Error semantico: el operador "+this.operador.getLexema()
-                   +" trabraja con subexpresiones int del lado derecho y encontro : "+this.Lder.check().getTipo()+", subexpresion incorrecta."
+                   +" trabraja con subexpresiones int del lado derecho y encontro : "+_tipoder.getTipo()+" en el lado izquierdo."
                    +this.Lizq.getToken().getError());
+           }
+           
                        
            if(!this.Lizq.check().esCompatible(new TipoInt()))
                    throw new ASTException("Error semantico: el operador "+this.operador.getLexema()
-                   +" trabraja con subexpresiones int del lado izquierdo y encontro : "+this.Lder.check().getTipo()+" subexpresion incorrecta."
-                		   +this.Lder.getToken().getError());
+                   +" trabraja con subexpresiones int del lado izquierdo y encontro : "+this.Lizq.check().getTipo()+" subexpresion incorrecta."
+                		   +this.Lizq.getToken().getError());
            
            //Todavía no computo el resultado...
            //Refactorear
